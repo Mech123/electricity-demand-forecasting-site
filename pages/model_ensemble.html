@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ensemble Models — Grid Guardian</title>
+
+  <!-- Global site CSS -->
+  <link rel="stylesheet" href="../assets/style.css" />
+
+  <style>
+    /* Page-specific (minimal) */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    @media (max-width: 980px){ .hero { grid-template-columns: 1fr; } }
+
+    .heroCard {
+      background: #101827;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+    .heroTitle {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 0 0 6px 0;
+      line-height: 1.1;
+    }
+    .heroSub {
+      margin: 0 0 14px 0;
+      color: rgba(255,255,255,0.75);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .tabRow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 12px 0 14px 0;
+    }
+    .tab {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.04);
+      text-decoration: none;
+      font-size: 13px;
+      transition: 0.15s ease;
+    }
+    .tab:hover { transform: translateY(-1px); background: rgba(255,255,255,0.07); }
+    .tab.active {
+      border-color: rgba(120,170,255,0.55);
+      background: rgba(120,170,255,0.14);
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .pillRow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      text-decoration: none;
+      color: rgba(255,255,255,0.9);
+      font-size: 13px;
+      transition: 0.15s ease;
+    }
+    .pill:hover { transform: translateY(-1px); background: rgba(255,255,255,0.06); }
+
+    .kpiGrid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    @media (max-width: 980px){ .kpiGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px){ .kpiGrid { grid-template-columns: 1fr; } }
+
+    .kpi {
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      padding: 12px 12px;
+    }
+    .kpi .label {
+      margin: 0 0 6px 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.70);
+    }
+    .kpi .value {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .kpi .hint {
+      margin: 6px 0 0 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.70);
+    }
+
+    .heroImage {
+      background: #0b1220;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      position: relative;
+    }
+    .heroImage img { width: 100%; height: 100%; object-fit: cover; opacity: 0.95; }
+    .badge {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.92);
+      font-size: 12px;
+      font-weight: 700;
+      backdrop-filter: blur(6px);
+    }
+
+    .sectionTitle {
+      margin: 22px 0 10px 0;
+      font-weight: 900;
+      font-size: 20px;
+    }
+    .muted {
+      color: rgba(255,255,255,0.75);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px){ .grid2 { grid-template-columns: 1fr; } }
+
+    .plotGrid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+    @media (max-width: 1100px){ .plotGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px){ .plotGrid { grid-template-columns: 1fr; } }
+
+    .cardplot {
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      overflow: hidden;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+    .cardplot:hover { transform: translateY(-2px); background: rgba(255,255,255,0.05); }
+    .cardplot img { width: 100%; height: 200px; object-fit: cover; display: block; }
+    .cardplot .cap { padding: 12px 12px 14px 12px; }
+    .cardplot .cap h4 { margin: 0 0 6px 0; font-size: 14px; font-weight: 800; }
+    .cardplot .cap p { margin: 0; font-size: 12px; color: rgba(255,255,255,0.70); line-height: 1.35; }
+
+    .tableWrap {
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.02);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      text-align: left;
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tbody td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.88);
+      vertical-align: top;
+    }
+    tbody tr:hover td { background: rgba(255,255,255,0.03); }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      margin-left: 8px;
+      color: rgba(255,255,255,0.92);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="left">
+      <button id="menuBtn" class="iconBtn" aria-label="Toggle sidebar">☰</button>
+      <div class="brand">
+        <div class="brandTitle">Grid Guardian</div>
+        <div class="brandSub">Short-Term Electricity Demand Forecasting</div>
+      </div>
+    </div>
+    <div class="right">
+      <a id="githubLink" class="topLink" href="#" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </header>
+
+  <div class="shell">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar collapsed">
+      <nav class="nav">
+        <a class="navItem" href="../index.html">🏠 Landing</a>
+        <a class="navItem" href="problem.html">🎯 Problem</a>
+        <a class="navItem" href="dataset.html">🧾 Dataset</a>
+        <a class="navItem" href="preprocessing.html">🧼 Preprocessing</a>
+        <a class="navItem" href="features.html">🧩 Features</a>
+        <a class="navItem" href="eda.html">📊 EDA</a>
+        <a class="navItem active" href="models.html">🧠 Models</a>
+        <a class="navItem" href="explainability.html">🔍 Explainability</a>
+        <a class="navItem" href="references.html">📚 References</a>
+      </nav>
+
+      <div class="sidebarFooter">
+        <div>© <span id="year"></span> Grid Guardian</div>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+
+      <!-- HERO -->
+      <div class="hero">
+
+        <div class="heroCard">
+          <h1 class="heroTitle">Ensemble Models — Reliability Under Pressure</h1>
+          <p class="heroSub">
+            Alex doesn’t want “one brilliant model.” Alex wants a system that stays stable during peak demand hours.
+            This page shows how ensembles reduce tail-risk, when switching helps, and how SHAP explains which base
+            model influences the ensemble’s decisions.
+          </p>
+
+          <!-- Tabs -->
+          <div class="tabRow">
+            <a class="tab" href="model_sarima.html">SARIMA</a>
+            <a class="tab" href="model_lstm.html">LSTM</a>
+            <a class="tab" href="model_hybrid.html">Hybrid</a>
+            <a class="tab active" href="model_ensemble.html">Ensemble</a>
+          </div>
+
+          <!-- Links (adjust if your repo stores these elsewhere) -->
+          <div class="pillRow">
+            <a class="pill" href="../assets/outputs/ensemble/ensemble_comparison_table.csv" target="_blank" rel="noopener">📄 Metrics CSV</a>
+            <a class="pill" href="../assets/outputs/ensemble/final_switch_residual_predictions.csv" target="_blank" rel="noopener">📈 Predictions CSV</a>
+          </div>
+
+          <!-- KPIs filled from ensemble_comparison_table.csv -->
+          <div class="kpiGrid">
+            <div class="kpi">
+              <p class="label">Best Overall (by MAE)</p>
+              <p class="value" id="kpiBestOverall">—</p>
+              <p class="hint">Overall MAE: <span id="kpiBestOverallMae">—</span></p>
+            </div>
+            <div class="kpi">
+              <p class="label">Best Peaks (by Peak MAE)</p>
+              <p class="value" id="kpiBestPeak">—</p>
+              <p class="hint">Peak MAE: <span id="kpiBestPeakMae">—</span></p>
+            </div>
+            <div class="finalPick kpi">
+              <p class="label">Operator Pick (shown in story)</p>
+              <p class="value" id="kpiPickName">final_switch_residual</p>
+              <p class="hint">Peak N (p90 eval): <span id="kpiPickPeakN">—</span></p>
+            </div>
+            <div class="kpi">
+              <p class="label">Pick’s Stability</p>
+              <p class="value" id="kpiPickWape">—</p>
+              <p class="hint">WAPE (overall) for the pick</p>
+            </div>
+          </div>
+
+          <p class="muted" style="margin-top:14px;">
+            <b>Peak definition:</b> actual ≥ p90(eval). Ensembles can look similar on average, but their behavior under peaks differs sharply.
+          </p>
+        </div>
+
+        <!-- Hero image (uses your ensemble folder + correct filename) -->
+        <div class="heroImage">
+          <div class="badge">Ensemble Overview</div>
+          <img src="../assets/images/models/ensemble/01_actual_vs_predictions_full.png" alt="Ensemble overview" />
+        </div>
+
+      </div>
+
+      <!-- SUMMARY -->
+      <h2 class="sectionTitle">What Alex Learned</h2>
+      <div class="grid2">
+        <div class="heroCard">
+          <h3 style="margin:0 0 8px 0; font-weight:900;">Why Ensembles</h3>
+          <p class="muted" style="margin:0;">
+            In grid operations, the cost of being wrong is not symmetric.
+            Ensembles reduce large errors (“tail risk”), improve stability, and allow a safer operational choice.
+            Our strongest approaches combine <b>residual correction</b> and <b>conditional switching</b> during peak regimes.
+          </p>
+        </div>
+        <div class="heroCard">
+          <h3 style="margin:0 0 8px 0; font-weight:900;">Why Explainability Matters</h3>
+          <p class="muted" style="margin:0;">
+            SHAP explains which base model (SARIMA/LSTM/Hybrid) influences the ensemble output.
+            This reveals degenerate ensembles (e.g., NNLS collapsing to LSTM) and shows why median/mean can become too conservative at peaks.
+          </p>
+        </div>
+      </div>
+
+      <!-- PLOTS -->
+      <h2 class="sectionTitle">Key Visualizations</h2>
+      <p class="muted">Click any plot to zoom. Use ← / → keys to navigate.</p>
+
+      <div class="plotGrid" id="plotGrid">
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/01_actual_vs_predictions_full.png">
+          <img src="../assets/images/models/ensemble/01_actual_vs_predictions_full.png" alt="Eval: Actual vs Key Models" />
+          <div class="cap">
+            <h4>Actual vs Key Models</h4>
+            <p>All models track cycles; differences show up at ramps and peaks.</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/02_eval_absolute_error_cdf.png">
+          <img src="../assets/images/models/ensemble/02_eval_absolute_error_cdf.png" alt="Eval Absolute Error CDF" />
+          <div class="cap">
+            <h4>Absolute Error CDF</h4>
+            <p>Tail-risk view: how often are we “dangerously wrong”?</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/04_tuned_final_switch_vs_lstm_full.png">
+          <img src="../assets/images/models/ensemble/04_tuned_final_switch_vs_lstm_full.png" alt="Tuned final-switch vs LSTM" />
+          <div class="cap">
+            <h4>Tuned Final-Switch vs LSTM</h4>
+            <p>Triggered points highlighted: switching happens when it matters.</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/05_Overall_vs_Peak__comparision.png">
+          <img src="../assets/images/models/ensemble/05_Overall_vs_Peak__comparision.png" alt="Overall vs Peak MAE" />
+          <div class="cap">
+            <h4>Overall vs Peak MAE</h4>
+            <p>Average performance can hide peak-hour failures.</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/06_triggered_peaks_error_improvement.png">
+          <img src="../assets/images/models/ensemble/06_triggered_peaks_error_improvement.png" alt="Triggered peaks error improvement" />
+          <div class="cap">
+            <h4>Triggered Peaks: Error Improvement</h4>
+            <p>Positive bars = the switch reduces error vs LSTM.</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/03_peak_detection_pr_curve.png">
+          <img src="../assets/images/models/ensemble/03_peak_detection_pr_curve.png" alt="Peak detection PR curve" />
+          <div class="cap">
+            <h4>Peak Detection (PR Curve)</h4>
+            <p>How well triggered points match true peaks (precision vs recall).</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SHAP -->
+      <h2 class="sectionTitle">Explainability (SHAP)</h2>
+      <p class="muted">
+        Global SHAP shows which base predictions the ensemble relies on. It reveals “collapsed” ensembles and explains
+        why median/mean can become conservative at peaks.
+      </p>
+
+      <div class="plotGrid">
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/01_shap_ens_mean.png">
+          <img src="../assets/images/models/ensemble/01_shap_ens_mean.png" alt="SHAP ens_mean" />
+          <div class="cap">
+            <h4>SHAP: ens_mean</h4>
+            <p>Averaging is fair — but not peak-intelligent.</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/05_shap_ens_median.png">
+          <img src="../assets/images/models/ensemble/05_shap_ens_median.png" alt="SHAP ens_median" />
+          <div class="cap">
+            <h4>SHAP: ens_median</h4>
+            <p>Median can be conservative (often SARIMA-dominated).</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/02_shap_ens_nnls.png">
+          <img src="../assets/images/models/ensemble/02_shap_ens_nnls.png" alt="SHAP ens_nnls" />
+          <div class="cap">
+            <h4>SHAP: ens_nnls</h4>
+            <p>NNLS may collapse to one model (often LSTM).</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/02_shap_ens_stack_ridge.png">
+          <img src="../assets/images/models/ensemble/02_shap_ens_stack_ridge.png" alt="SHAP ens_stack_ridge" />
+          <div class="cap">
+            <h4>SHAP: ens_stack_ridge</h4>
+            <p>Stacking: LSTM leads; others correct in specific regimes.</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/03_shap_ens_weighted_ridge.png">
+          <img src="../assets/images/models/ensemble/03_shap_ens_weighted_ridge.png" alt="SHAP ens_weighted_ridge" />
+          <div class="cap">
+            <h4>SHAP: ens_weighted_ridge</h4>
+            <p>More conservative weighting → smoother behavior.</p>
+          </div>
+        </div>
+
+        <div class="cardplot" data-full="../assets/images/models/ensemble/06_residual_corrector.png">
+          <img src="../assets/images/models/ensemble/06_residual_corrector.png" alt="SHAP residual corrector" />
+          <div class="cap">
+            <h4>SHAP: Residual Corrector g(.)</h4>
+            <p>Global + local explanation for peak-time correction decisions.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TABLE -->
+      <h2 class="sectionTitle">Full Comparison (Overall vs Peak)</h2>
+      <p class="muted">
+        Loaded from <code>ensemble_comparison_table.csv</code>. Rows are tagged for best overall MAE and best peak MAE.
+      </p>
+
+      <div class="tableWrap" style="max-height: 520px; overflow:auto;">
+        <table id="comparisonTable">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Overall MAE</th>
+              <th>Overall RMSE</th>
+              <th>Overall WAPE</th>
+              <th>Overall sMAPE</th>
+              <th>Peak MAE</th>
+              <th>Peak RMSE</th>
+              <th>Peak WAPE</th>
+              <th>Peak sMAPE</th>
+              <th>Peak N</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="10" style="padding:14px; color: rgba(255,255,255,0.75);">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top: 16px;">
+        <a class="pill" href="models.html">⬅ Back to Models Hub</a>
+        <a class="pill" href="explainability.html">Next: Explainability ➜</a>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Zoom Modal (gallery) -->
+  <div id="imgModal" style="
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    display: none; align-items: center; justify-content: center;
+    padding: 18px; z-index: 9999;">
+    <div style="max-width: 1200px; width: 100%; position: relative;">
+      <button id="closeModal" class="iconBtn" style="position:absolute; right:8px; top:8px;">✕</button>
+      <button id="prevBtn" class="iconBtn" style="position:absolute; left:8px; top:8px;">←</button>
+      <button id="nextBtn" class="iconBtn" style="position:absolute; left:52px; top:8px;">→</button>
+      <img id="modalImg" src="" alt="Zoomed plot"
+           style="width:100%; max-height: 88vh; object-fit: contain; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12);" />
+    </div>
+  </div>
+
+  <!-- Global JS (sidebar toggle, github link, year) -->
+  <script src="../assets/app.js"></script>
+
+  <script>
+    // ===== Utilities =====
+    function toNum(x){
+      const n = Number(x);
+      return Number.isFinite(n) ? n : null;
+    }
+    function fmt(x, digits=3){
+      const n = toNum(x);
+      if (n === null) return "—";
+      if (Math.abs(n) >= 1000) return n.toFixed(0);
+      return n.toFixed(digits);
+    }
+    function parseCSV(text){
+      const lines = text.trim().split(/\r?\n/);
+      const header = lines[0].split(",").map(s => s.trim());
+      const rows = [];
+      for (let i=1; i<lines.length; i++){
+        if (!lines[i].trim()) continue;
+        const parts = lines[i].split(",").map(s => s.trim());
+        const obj = {};
+        for (let j=0; j<header.length; j++){
+          obj[header[j]] = parts[j];
+        }
+        rows.push(obj);
+      }
+      return rows;
+    }
+
+    // ===== Image Modal (gallery) =====
+    const modal = document.getElementById("imgModal");
+    const modalImg = document.getElementById("modalImg");
+    const closeModal = document.getElementById("closeModal");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const plotCards = Array.from(document.querySelectorAll(".cardplot"));
+    const modalImages = plotCards.map(c => c.getAttribute("data-full"));
+    let modalIndex = 0;
+
+    function openModalAt(idx){
+      modalIndex = Math.max(0, Math.min(modalImages.length - 1, idx));
+      modalImg.src = modalImages[modalIndex];
+      modal.style.display = "flex";
+    }
+    function closeModalNow(){
+      modal.style.display = "none";
+      modalImg.src = "";
+    }
+    function stepModal(dir){
+      const next = (modalIndex + dir + modalImages.length) % modalImages.length;
+      openModalAt(next);
+    }
+
+    plotCards.forEach((card, idx) => card.addEventListener("click", () => openModalAt(idx)));
+    closeModal.addEventListener("click", closeModalNow);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModalNow(); });
+    prevBtn.addEventListener("click", () => stepModal(-1));
+    nextBtn.addEventListener("click", () => stepModal(1));
+
+    document.addEventListener("keydown", (e) => {
+      if (modal.style.display !== "flex") return;
+      if (e.key === "Escape") closeModalNow();
+      if (e.key === "ArrowLeft") stepModal(-1);
+      if (e.key === "ArrowRight") stepModal(1);
+    });
+
+    // ===== Load comparison CSV and populate KPIs + table =====
+    async function loadComparison(){
+      const url = "../assets/outputs/ensemble/ensemble_comparison_table.csv";
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Failed to load " + url);
+
+      const text = await res.text();
+      const rows = parseCSV(text);
+
+      const typed = rows.map(r => ({
+        Model: r.Model,
+        Overall_MAE: toNum(r.Overall_MAE),
+        Overall_RMSE: toNum(r.Overall_RMSE),
+        Overall_WAPE: toNum(r.Overall_WAPE),
+        Overall_sMAPE: toNum(r.Overall_sMAPE),
+        Peak_MAE: toNum(r.Peak_MAE),
+        Peak_RMSE: toNum(r.Peak_RMSE),
+        Peak_WAPE: toNum(r.Peak_WAPE),
+        Peak_sMAPE: toNum(r.Peak_sMAPE),
+        Peak_N: toNum(r.Peak_N)
+      })).filter(r => r.Model);
+
+      if (typed.length === 0) throw new Error("No rows in CSV");
+
+      const bestOverall = typed.reduce((a,b) => (a.Overall_MAE ?? 1e18) < (b.Overall_MAE ?? 1e18) ? a : b, typed[0]);
+      const bestPeak = typed.reduce((a,b) => (a.Peak_MAE ?? 1e18) < (b.Peak_MAE ?? 1e18) ? a : b, typed[0]);
+
+      const preferredPickName = "final_switch_residual";
+      const pick = typed.find(r => r.Model === preferredPickName) || bestOverall;
+
+      document.getElementById("kpiBestOverall").textContent = bestOverall.Model;
+      document.getElementById("kpiBestOverallMae").textContent = fmt(bestOverall.Overall_MAE, 3);
+
+      document.getElementById("kpiBestPeak").textContent = bestPeak.Model;
+      document.getElementById("kpiBestPeakMae").textContent = fmt(bestPeak.Peak_MAE, 3);
+
+      document.getElementById("kpiPickName").textContent = pick.Model;
+      document.getElementById("kpiPickPeakN").textContent = pick.Peak_N ?? "—";
+      document.getElementById("kpiPickWape").textContent = fmt(pick.Overall_WAPE, 5);
+
+      const tbody = document.querySelector("#comparisonTable tbody");
+      tbody.innerHTML = "";
+
+      typed.sort((a,b) => (a.Overall_MAE ?? 1e18) - (b.Overall_MAE ?? 1e18));
+
+      typed.forEach(r => {
+        const tr = document.createElement("tr");
+
+        const modelCell = document.createElement("td");
+        modelCell.textContent = r.Model;
+
+        if (r.Model === bestOverall.Model){
+          const t = document.createElement("span");
+          t.className = "tag";
+          t.textContent = "BEST OVERALL";
+          modelCell.appendChild(t);
+        }
+        if (r.Model === bestPeak.Model){
+          const t = document.createElement("span");
+          t.className = "tag";
+          t.textContent = "BEST PEAK";
+          modelCell.appendChild(t);
+        }
+        if (r.Model === pick.Model && r.Model !== bestOverall.Model && r.Model !== bestPeak.Model){
+          const t = document.createElement("span");
+          t.className = "tag";
+          t.textContent = "OPERATOR PICK";
+          modelCell.appendChild(t);
+        }
+
+        function td(v){ const c=document.createElement("td"); c.textContent=v; return c; }
+
+        tr.appendChild(modelCell);
+        tr.appendChild(td(fmt(r.Overall_MAE, 3)));
+        tr.appendChild(td(fmt(r.Overall_RMSE, 3)));
+        tr.appendChild(td(fmt(r.Overall_WAPE, 5)));
+        tr.appendChild(td(fmt(r.Overall_sMAPE, 5)));
+        tr.appendChild(td(fmt(r.Peak_MAE, 3)));
+        tr.appendChild(td(fmt(r.Peak_RMSE, 3)));
+        tr.appendChild(td(fmt(r.Peak_WAPE, 5)));
+        tr.appendChild(td(fmt(r.Peak_sMAPE, 5)));
+        tr.appendChild(td(r.Peak_N ?? "—"));
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    loadComparison().catch(err => {
+      console.error(err);
+      const tbody = document.querySelector("#comparisonTable tbody");
+      tbody.innerHTML = `<tr><td colspan="10" style="padding:14px; color: rgba(255,255,255,0.75);">
+        Could not load <code>../assets/outputs/ensemble/ensemble_comparison_table.csv</code>.<br/>
+        Please verify the CSV path and file name.
+      </td></tr>`;
+    });
+  </script>
+
+</body>
+</html>

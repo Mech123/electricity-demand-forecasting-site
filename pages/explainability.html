@@ -459,7 +459,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../Short Term Electricity Demand Forecasting.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="problem.html"><i class="bi bi-bullseye"></i> Understanding the Problem</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -969,8 +969,212 @@
   </div>
 
   <!-- Ensemble Section -->
-  <div id="ensemble-section" class="model-section">
-  </div>
+<!-- Ensemble Section -->
+<div id="ensemble-section" class="model-section">
+
+  <!-- Ensemble Overview -->
+  <section class="card" style="text-align:center;">
+    <h2 style="font-weight: bold; font-size: 1.5em;">Ensemble Explainability (SHAP)</h2>
+    <p class="muted" style="max-width: 980px; margin: 0 auto; line-height: 1.7;">
+      These SHAP plots explain <strong>which base model prediction drives the ensemble</strong>.
+      All ensemble methods combine: <span class="shap-value">sarima_pred</span>, <span class="shap-value">lstm_pred</span>, and <span class="shap-value">hybrid_pred</span>.
+      <br><br>
+      <strong>How to read:</strong> SHAP values to the <strong>right</strong> push the ensemble prediction higher, to the <strong>left</strong> push it lower.
+      A <strong>wider spread</strong> means that base model has <strong>more influence</strong>. Color shows the feature value (red = high, blue = low).
+    </p>
+  </section>
+
+  <!-- Global SHAP plots -->
+  <section class="card" style="text-align:center;">
+    <h2 style="font-weight: bold; font-size: 1.5em;">Global SHAP Across Ensemble Methods</h2>
+    <p class="muted">Click any image to zoom.</p>
+
+    <div class="grid" style="margin-top: 20px;">
+
+      <!-- ens_mean -->
+      <div class="cardplot"
+           data-group="ensemble"
+           data-title="SHAP (Global): ens_mean (features = base predictions)"
+           data-cap="Mean ensemble: averages SARIMA, LSTM, and Hybrid predictions.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">ens_mean</div>
+            <div class="cardplot-sub">Average of SARIMA, LSTM, Hybrid</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../assets/images/models/ensemble/01_shap_ens_mean.png"
+               alt="SHAP (Global): ens_mean (features = base predictions)"
+               data-modal="true"
+               data-caption="SHAP (Global): ens_mean (features = base predictions)." />
+        </div>
+      </div>
+
+      <!-- ens_median -->
+      <div class="cardplot"
+           data-group="ensemble"
+           data-title="SHAP (Global): ens_median (KernelExplainer, sampled)"
+           data-cap="Median ensemble: robust combination that reduces sensitivity to outliers.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">ens_median</div>
+            <div class="cardplot-sub">Median of SARIMA, LSTM, Hybrid</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../assets/images/models/ensemble/02_shap_ens_median.png"
+               alt="SHAP (Global): ens_median (KernelExplainer, sampled)"
+               data-modal="true"
+               data-caption="SHAP (Global): ens_median (KernelExplainer, sampled)." />
+        </div>
+      </div>
+
+      <!-- ens_stack_ridge -->
+      <div class="cardplot"
+           data-group="ensemble"
+           data-title="SHAP (Global): ens_stack_ridge (features standardized)"
+           data-cap="Stacked Ridge: meta-model learns how to combine base predictions.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">ens_stack_ridge</div>
+            <div class="cardplot-sub">Ridge stacking (meta-learner)</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../assets/images/models/ensemble/04_shap_ens_stack_ridge.png"
+               alt="SHAP (Global): ens_stack_ridge (features standardized)"
+               data-modal="true"
+               data-caption="SHAP (Global): ens_stack_ridge (features standardized)." />
+        </div>
+      </div>
+
+      <!-- ens_weighted_ridge -->
+      <div class="cardplot"
+           data-group="ensemble"
+           data-title="SHAP (Global): ens_weighted_ridge (features = base predictions)"
+           data-cap="Weighted Ridge: learns a weighted linear combination based on performance.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">ens_weighted_ridge</div>
+            <div class="cardplot-sub">Weighted linear ensemble (Ridge)</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../assets/images/models/ensemble/03_shap_ens_weighted_ridge.png"
+               alt="SHAP (Global): ens_weighted_ridge (features = base predictions)"
+               data-modal="true"
+               data-caption="SHAP (Global): ens_weighted_ridge (features = base predictions)." />
+        </div>
+      </div>
+
+      <!-- ens_nnls -->
+      <div class="cardplot"
+           data-group="ensemble"
+           data-title="SHAP (Global): ens_nnls (features = base predictions)"
+           data-cap="NNLS: combines base predictions with non-negative weights (no negative weights).">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">ens_nnls</div>
+            <div class="cardplot-sub">Non-Negative Least Squares</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../assets/images/models/ensemble/05_shap_ens_nnls.png"
+               alt="SHAP (Global): ens_nnls (features = base predictions)"
+               data-modal="true"
+               data-caption="SHAP (Global): ens_nnls (features = base predictions)." />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Optimized SHAP summary -->
+    <div class="panel" style="margin-top:18px; text-align:left;">
+      <h3 style="margin:0 0 10px; font-weight:bold;">Quick Interpretation (What these plots mean)</h3>
+
+      <div style="line-height:1.8;">
+        <p style="margin: 8px 0;">
+          <strong>ens_mean:</strong> The ensemble takes the <strong>average</strong> of all three models, so influence is generally <strong>balanced</strong>.
+          In your plot, SARIMA appears slightly stronger, but no single model fully dominates.
+        </p>
+        <p style="margin: 8px 0;">
+          <strong>ens_median:</strong> The ensemble follows the <strong>middle (most stable) prediction</strong>, so it naturally avoids extreme values.
+          SHAP values stay closer to zero → <strong>no dominant model</strong> and <strong>stable behavior</strong>.
+        </p>
+        <p style="margin: 8px 0;">
+          <strong>ens_stack_ridge:</strong> A meta-model learns how to combine the three predictions.
+          Here, <strong>SARIMA and LSTM</strong> show stronger global influence than Hybrid → the stacker relies more on them.
+        </p>
+        <p style="margin: 8px 0;">
+          <strong>ens_weighted_ridge:</strong> A weighted linear ensemble.
+          Your plot suggests <strong>LSTM contributes slightly more</strong>, meaning the weighted model trusts LSTM more when optimizing performance.
+        </p>
+        <p style="margin: 8px 0;">
+          <strong>ens_nnls:</strong> Similar to weighted combination but weights must be <strong>non-negative</strong>.
+          SHAP spread looks more uniform → <strong>more balanced contributions</strong> and fewer extreme dependencies.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Residual Corrector plot (with waterfall) -->
+  <section class="card" style="text-align:center;">
+    <h2 style="font-weight: bold; font-size: 1.5em;">Residual Corrector g(.) (Global + One Peak Example)</h2>
+    <p class="muted" style="max-width: 980px; margin: 0 auto; line-height: 1.7;">
+      This figure explains the <strong>residual corrector</strong> that adjusts a baseline using base predictions.
+      The waterfall shows one peak-time case and how each input moves the prediction from <strong>E[f(X)]</strong> to <strong>f(x)</strong>.
+    </p>
+
+    <div class="grid" style="margin-top: 20px; grid-template-columns: 1fr;">
+      <div class="cardplot"
+           data-group="ensemble"
+           data-title="SHAP (Global): Residual Corrector g(.) (features standardized)"
+           data-cap="Residual Corrector: Hybrid contributes strongly; SARIMA acts more stable and can offset.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Residual Corrector g(.)</div>
+            <div class="cardplot-sub">Global SHAP + Waterfall</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../assets/images/models/ensemble/06_shap_residual_corrector.png"
+               alt="SHAP (Global): Residual Corrector g(.) (features standardized)"
+               data-modal="true"
+               data-caption="SHAP (Global): Residual Corrector g(.) (features standardized)." />
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px; text-align:left;">
+      <h3 style="margin:0 0 10px; font-weight:bold;">Residual Corrector Summary (Plain English)</h3>
+      <ul style="margin:0; padding-left:18px; line-height:1.8;">
+        <li><strong>Hybrid_pred drives the correction:</strong> it has the larger SHAP impact, meaning it mainly decides how much to adjust the forecast.</li>
+        <li><strong>SARIMA is steadier:</strong> it contributes less and acts like a stabilizer (sometimes pulling the correction down).</li>
+        <li><strong>Peak-time takeaway:</strong> in the shown example, Hybrid adds a strong positive correction while SARIMA offsets part of it → final output is their net effect.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final one-liner takeaway -->
+  <section class="card">
+    <div class="panel" style="text-align:left;">
+      <h3 style="margin:0 0 10px; font-weight:bold;">Final Takeaway</h3>
+      <p style="margin:0; line-height:1.8;">
+        Overall, the ensemble methods either <strong>blend all models for stability</strong> (mean/median/NNLS)
+        or <strong>learn who to trust more</strong> (ridge stacking/weighted ridge), while the residual corrector shows
+        that <strong>Hybrid contributes the strongest adjustments</strong> and SARIMA provides a steadier baseline influence.
+      </p>
+    </div>
+  </section>
+
+</div>
+
 
 </main>
 

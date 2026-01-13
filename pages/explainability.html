@@ -1100,19 +1100,19 @@
       <div style="line-height:1.8;">
         <p style="margin: 8px 0;">
           <strong>ens_mean:</strong> The ensemble takes the <strong>average</strong> of all three models, so influence is generally <strong>balanced</strong>.
-          In your plot, SARIMA appears slightly stronger, but no single model fully dominates.
+          In the plot, SARIMA appears slightly stronger, but no single model fully dominates.
         </p>
         <p style="margin: 8px 0;">
           <strong>ens_median:</strong> The ensemble follows the <strong>middle (most stable) prediction</strong>, so it naturally avoids extreme values.
-          SHAP values stay closer to zero → <strong>no dominant model</strong> and <strong>stable behavior</strong>.
+          SHAP values stay closer to zero and<strong>no dominant model</strong> and <strong>stable behavior</strong>.
         </p>
         <p style="margin: 8px 0;">
           <strong>ens_stack_ridge:</strong> A meta-model learns how to combine the three predictions.
-          Here, <strong>SARIMA and LSTM</strong> show stronger global influence than Hybrid → the stacker relies more on them.
+          Here, <strong>SARIMA and LSTM</strong> show stronger global influence than Hybrid and the stacker relies more on them.
         </p>
         <p style="margin: 8px 0;">
           <strong>ens_weighted_ridge:</strong> A weighted linear ensemble.
-          Your plot suggests <strong>LSTM contributes slightly more</strong>, meaning the weighted model trusts LSTM more when optimizing performance.
+          the plot shows <strong>LSTM contributes slightly more</strong>, meaning the weighted model trusts LSTM more when optimizing performance.
         </p>
         <p style="margin: 8px 0;">
           <strong>ens_nnls:</strong> Similar to weighted combination but weights must be <strong>non-negative</strong>.
@@ -1152,7 +1152,7 @@
     </div>
 
     <div class="panel" style="margin-top:16px; text-align:left;">
-      <h3 style="margin:0 0 10px; font-weight:bold;">Residual Corrector Summary (Plain English)</h3>
+      <h3 style="margin:0 0 10px; font-weight:bold;">Residual Corrector Summary</h3>
       <ul style="margin:0; padding-left:18px; line-height:1.8;">
         <li><strong>Hybrid_pred drives the correction:</strong> it has the larger SHAP impact, meaning it mainly decides how much to adjust the forecast.</li>
         <li><strong>SARIMA is steadier:</strong> it contributes less and acts like a stabilizer (sometimes pulling the correction down).</li>

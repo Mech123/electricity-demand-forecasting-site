@@ -3,53 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SARIMA – Model</title>
+  <title>SARIMA Model | Seasonal ARIMA Baseline</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css" />
-
-  <style>
-    .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 0; }
-    .tab {
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px; border:1px solid var(--border); border-radius: 999px;
-      text-decoration:none; color: var(--text-main); background:#fff;
-      transition: transform .12s ease, box-shadow .12s ease;
-    }
-    .tab:hover{ transform: translateY(-1px); box-shadow: 0 8px 20px rgba(16,24,40,.08); }
-    .tab.active { background: var(--primary); border-color: var(--primary); color:#fff; }
-
-    .summary-box{
-      border:1px solid var(--border);
-      border-radius: 12px;
-      background:#fff;
-      padding: 12px;
-      margin-top: 12px;
-    }
-
-    .metrics { width:100%; border-collapse: collapse; margin-top: 10px; border:1px solid var(--border); border-radius: 10px; overflow:hidden; }
-    .metrics th, .metrics td { padding: 10px 12px; border-bottom:1px solid var(--border); text-align:left; }
-    .metrics th { background:#f9fafb; }
-    .metrics tr:last-child td { border-bottom:none; }
-
-    .gallery { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
-    @media (max-width: 980px){ .gallery { grid-template-columns: 1fr; } }
-    .figure { border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
-    .figure img { width:100%; height:auto; display:block; cursor: zoom-in; }
-    .figcap { padding: 10px 12px; border-top:1px solid var(--border); }
-    .figcap .title { margin:0 0 6px 0; font-weight:700; }
-    .figcap .desc { margin:0; color: var(--text-muted); }
-
-    /* modal */
-    .img-modal{ position:fixed; inset:0; background: rgba(0,0,0,.72); display:none; align-items:center; justify-content:center; padding: 22px; z-index: 9999; }
-    .img-modal.open{ display:flex; }
-    .img-modal-card{ max-width: min(1100px, 96vw); max-height: 92vh; width: 100%; background:#111827; border-radius: 14px; overflow:hidden; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 24px 80px rgba(0,0,0,.45); }
-    .img-modal-top{ display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; color:#e5e7eb; gap:12px; border-bottom: 1px solid rgba(255,255,255,.10); }
-    .img-modal-top .cap{ font-size: 13px; color: #d1d5db; }
-    .img-modal-top button{ border:1px solid rgba(255,255,255,.18); background: transparent; color:#fff; border-radius: 10px; padding: 6px 10px; cursor:pointer; }
-    .img-modal-body{ background:#0b1220; display:flex; align-items:center; justify-content:center; }
-    .img-modal-body img{ max-width: 100%; max-height: 82vh; width:auto; height:auto; display:block; }
-  </style>
 
   <style>
     /* Header Styling */
@@ -60,12 +17,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       border-bottom: 2px solid rgba(0, 120, 255, 0.1);
     }
-
-    .content {
-      padding-top: 112px;
-    }
-
-    /* Enhanced Header Styling */
+    .content { padding-top: 112px; }
     .topbar-center {
       font-size: 2em;
       font-weight: 700;
@@ -82,7 +34,6 @@
       text-transform: uppercase;
       transition: all 0.3s ease;
     }
-
     .topbar-center::before {
       content: '';
       position: absolute;
@@ -95,39 +46,287 @@
       opacity: 0.5;
       animation: shimmer-line 3s ease-in-out infinite;
     }
+    @keyframes shimmer-line { 0%,100%{opacity:0.3;} 50%{opacity:0.7;} }
+    .icon-btn { z-index: 1002; position: relative; }
+    body { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
+    html { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
+    .header-logo { height: 150px; width: auto; margin-right: 1px; margin-left: -10px; object-fit: contain; }
 
-    @keyframes shimmer-line {
-      0%, 100% {
-        opacity: 0.3;
-      }
-      50% {
-        opacity: 0.7;
-      }
+    /* Dashboard layout */
+    .dash{
+      display:block;
     }
 
-    /* Ensure hamburger button is clickable */
-    .icon-btn {
-      z-index: 1002;
+    /* KPI Grid */
+    .kpi-grid{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    @media (max-width: 980px){ .kpi-grid{ grid-template-columns: 1fr; } }
+    .kpi{
+      border: 2px solid #3b82f6;
+      border-radius: 10px;
+      padding: 6px 8px;
+      background: rgba(255,255,255,0.25);
+    }
+    .kpi .label{ color: var(--text-muted); font-size: 14px; font-weight: 700; }
+    .kpi .value{ font-size: 16px; margin-top: 2px; }
+
+    /* Tabs */
+    .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 10px 0 0; justify-content:center; }
+    .tab{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px; border:1px solid var(--border); border-radius: 999px;
+      text-decoration:none; color: var(--text-main); background:#fff;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
+    }
+    .tab:hover{ 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3), 0 4px 12px rgba(59, 130, 246, 0.15);
+      border-color: #3b82f6;
+    }
+    .tab.active{ background: var(--primary); border-color: var(--primary); color:#fff; }
+
+    /* Pills */
+    .pill-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 12px; justify-content:center; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border:1px solid var(--border);
+      border-radius: 999px;
+      background:#fff;
+      color: var(--text-main);
+      text-decoration:none;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .pill:hover{ 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3), 0 4px 12px rgba(59, 130, 246, 0.15);
+      border-color: #3b82f6;
+    }
+    .pill i{ color: var(--primary); }
+
+    /* Summary box */
+    .summary-box{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.35);
+      padding: 14px;
+      margin-top: 14px;
+      text-align:left;
+    }
+
+    /* Metrics panels */
+    .grid-2{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
+    @media (max-width: 980px){ .grid-2 { grid-template-columns: 1fr; } }
+    .panel{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.35);
+      padding: 14px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+    }
+    .panel:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(59, 130, 246, 0.25), 0 6px 16px rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+    .metrics { width:100%; border-collapse: collapse; margin-top: 10px; border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
+    .metrics th, .metrics td { padding: 10px 12px; border-bottom:1px solid var(--border); text-align:left; }
+    .metrics th { background:#f9fafb; }
+    .metrics tr:last-child td { border-bottom:none; }
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+    @media (max-width: 768px){ .metrics-grid { grid-template-columns: 1fr; } }
+    .metrics-col { border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
+    .metrics-col-header { padding: 10px 12px; background:#f9fafb; font-weight: 700; border-bottom:1px solid var(--border); }
+    .metrics-col table { width:100%; border-collapse: collapse; }
+    .metrics-col table td { padding: 8px 12px; border-bottom:1px solid var(--border); }
+    .metrics-col table tr:last-child td { border-bottom:none; }
+    .directional-accuracy-card {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      background: rgba(59, 130, 246, 0.05);
+      text-align: center;
+    }
+    .directional-accuracy-card .label {
+      font-size: 0.85em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .directional-accuracy-card .value {
+      font-size: 1.2em;
+      font-weight: 700;
+      color: #3b82f6;
+    }
+
+    /* Plot grid - modern cardplot style */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .cardplot{
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow:hidden;
+      cursor:pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
       position: relative;
     }
-
-    /* Match background to header */
-    body {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    .cardplot::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 120, 255, 0.02) 0%, rgba(249, 250, 251, 0.5) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .cardplot:hover::before {
+      opacity: 1;
+    }
+    .cardplot:hover{
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 12px 32px rgba(0, 120, 255, 0.25), 0 6px 16px rgba(0, 120, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 120, 255, 0.4);
+    }
+    @media (max-width: 1200px){
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px){
+      .grid{ grid-template-columns: 1fr; }
     }
 
-    html {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    .cardplot-head{
+      padding: 16px 18px;
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #f3f4f6;
+      background: linear-gradient(135deg, rgba(0, 120, 255, 0.04) 0%, rgba(249, 250, 251, 0.8) 100%);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+      text-align: left;
+    }
+    .cardplot:hover .cardplot-head{
+      background: linear-gradient(135deg, rgba(0, 120, 255, 0.08) 0%, rgba(239, 246, 255, 0.9) 100%);
+      border-bottom-color: rgba(0, 120, 255, 0.15);
+    }
+    .cardplot-title{ 
+      font-weight: 600; 
+      margin:0; 
+      font-size: 20px;
+      color: #111827;
+      letter-spacing: -0.01em;
+      transition: color 0.3s ease;
+      text-align: left;
+    }
+    .cardplot:hover .cardplot-title {
+      color: #0078ff;
+    }
+    .cardplot-sub{ 
+      color: #9ca3af; 
+      margin-top: 6px; 
+      line-height: 1.5; 
+      font-size: 14px;
     }
 
-    /* Logo styling */
-    .header-logo {
-      height: 150px;
-      width: auto;
-      margin-right: 1px;
-      margin-left: -10px;
-      object-fit: contain;
+    .cardplot-body{ 
+      padding: 12px 14px 14px; 
+      position: relative;
+      z-index: 2;
     }
+    .plot-img{
+      width: 100%;
+      height: auto;
+      display:block;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #fff;
+      transition: transform 0.3s ease;
+    }
+    .cardplot:hover .plot-img {
+      transform: scale(1.02);
+    }
+
+    /* Enable hover on the main SARIMA Model section card */
+    section.card:first-of-type {
+      transition: all 0.3s ease;
+    }
+    section.card:first-of-type:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(59, 130, 246, 0.25), 0 6px 16px rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    /* Modal */
+    .modal-overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.72);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:9999;
+    }
+    .modal-overlay.open{ display:flex; }
+    .modal{
+      width:min(1100px, 96vw);
+      max-height: 92vh;
+      overflow:hidden;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(20,24,32,0.96);
+      display:flex;
+      flex-direction:column;
+    }
+    .modal-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.10);
+    }
+    .modal-title{ opacity:0.95; font-weight: 700; color: #fff; }
+    .modal-actions{ display:flex; gap:8px; align-items:center; }
+    .icon-round{
+      width:38px; height:38px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      cursor:pointer;
+      color: #fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition: background 0.2s ease;
+    }
+    .icon-round:hover{ background: rgba(255,255,255,0.08); }
+    .modal-body{ overflow:auto; padding:14px; }
+    .modal-body img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .modal-cap{ margin-top:10px; opacity:0.9; color: #9ca3af; }
   </style>
 </head>
 
@@ -147,7 +346,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../Short Term Electricity Demand Forecasting.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="problem.html"><i class="bi bi-bullseye"></i> Understanding the Problem</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -167,11 +366,16 @@
 </aside>
 
 <main class="content">
-  <section class="card">
-    <h1 style="margin:0;">SARIMA</h1>
 
-    <p class="muted" style="margin-top:10px;">
-      Statistical baseline capturing trend + seasonality.
+  <!-- HERO -->
+  <section class="card" style="text-align:center; position: relative;">
+    <h1 style="font-weight: bold; font-size: 2.2em; text-align: center;">SARIMA Model</h1>
+    <p class="muted" style="font-size: 0.9em; text-align: center;">
+      Seasonal ARIMA Baseline
+    </p>
+    <p class="muted" style="font-size: 0.85em; text-align: center; margin-top: 8px;">
+      Statistical baseline capturing trend and seasonality using SARIMA(1,1,1)(1,1,1,24) configuration.<br>
+      Trained on 2015-2017 data and evaluated on 2018 test period. Evaluated overall and at peak-load (p90).
     </p>
 
     <div class="tabs">
@@ -181,131 +385,236 @@
       <a class="tab" href="model_ensemble.html"><i class="bi bi-diagram-2"></i> Ensemble</a>
     </div>
 
-    <div class="hero-actions" style="margin-top:12px;">
-      <a class="btn" href="../assets/outputs/sarima/sarima_metrics.json" target="_blank" rel="noopener">
-        <i class="bi bi-braces"></i> Open metrics JSON
+    <div class="pill-row">
+      <a class="pill" href="../assets/outputs/sarima/sarima_metrics.json" target="_blank" rel="noopener">
+        <i class="bi bi-braces"></i> Metrics JSON
       </a>
-      <a class="btn" href="../assets/outputs/sarima/sarima_forecasts.csv" target="_blank" rel="noopener">
-        <i class="bi bi-table"></i> Open forecasts CSV
+      <a class="pill" href="../assets/outputs/sarima/sarima_forecasts.csv" target="_blank" rel="noopener">
+        <i class="bi bi-table"></i> Predictions CSV
       </a>
-      <a class="btn" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/sarima_model.ipynb" target="_blank" rel="noopener">
-        <i class="bi bi-journal-code"></i> Notebook (GitHub)
+      <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/sarima_model.ipynb" target="_blank" rel="noopener">
+        <i class="bi bi-journal-code"></i> Notebook
       </a>
     </div>
 
-    <!-- Summary FIRST -->
-    <div class="summary-box">
-      <h2 style="margin:0 0 8px;">Summary</h2>
-      <p class="muted" style="margin:0;">
-        SARIMA is implemented as a classical baseline for hourly electricity demand forecasting in Germany (2015–2018). The workflow loads the preprocessed time series, enforces a datetime index, and applies a time-based split (train: 2015–2017, test: 2018). Seasonality and stationarity are examined using visual analysis, ADF/KPSS tests, and ACF/PACF plots. Due to computational constraints, automated order search is skipped, and a manually specified SARIMA(1,1,1)(1,1,1,24) configuration is trained on a reduced window for efficiency. The model produces forecasts for 2018, compares predicted and actual demand through plots, analyzes residual behavior, and evaluates performance using standard metrics such as MAE, RMSE, MAPE/sMAPE, bias, and R².
-      </p>
+    <!-- KPIs computed from CSV -->
+    <div class="kpi-grid" id="csvKpis" style="display:none;">
+      <div class="kpi"><p class="label">Overall MAE</p><p class="value" id="kpiMaeAll">–</p></div>
+      <div class="kpi"><p class="label">Overall RMSE</p><p class="value" id="kpiRmseAll">–</p></div>
+      <div class="kpi"><p class="label">Peak MAE</p><p class="value" id="kpiMaePeak">–</p></div>
+      <div class="kpi"><p class="label">Peak RMSE</p><p class="value" id="kpiRmsePeak">–</p></div>
     </div>
+
+    <div id="csvState" class="muted" style="margin-top:10px;">Loading CSV metrics…</div>
   </section>
 
-  <!-- Metrics SECOND (from SARIMA forecasts CSV, not eval table) -->
-  <section class="card">
-    <h2>Metrics</h2>
-    <p class="muted">Overall and peak metrics.</p>
+  <div class="dash">
 
-    <div id="mState" class="muted">Computing metrics</div>
+    <!-- LEFT: Metrics + Figures -->
+    <section class="card" style="text-align: center;">
+    <h2 style="font-weight: bold; font-size: 1.5em;">Model Performance</h2>
+    <p class="muted">Key metrics and visualizations. Click images to zoom.</p>
 
-    <table class="metrics" id="mTable" style="display:none;">
-      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
-      <tbody id="mBody"></tbody>
-    </table>
-  </section>
-
-  <!-- Figures THIRD -->
-  <section class="card">
-    <h2>Figures</h2>
-    <p class="muted">Click any image to enlarge.</p>
-
-    <!-- All 11 SARIMA screenshots in order -->
-    <div class="gallery">
-      <div class="figure">
-        <img data-modal="true" data-caption="00_data_shift_analysis.png" src="../assets/images/models/sarima/00_data_shift_analysis.png" alt="00_data_shift_analysis">
-        <div class="figcap"><p class="title">00_data_shift_analysis.png</p><p class="desc">Train vs test distribution and drift checks.</p></div>
+      <!-- Key Performance Metrics -->
+      <div class="grid-2" style="margin-top: 20px;">
+        <div class="panel">
+          <h3 style="margin:0 0 10px; font-weight: bold;">Model Configuration</h3>
+          <table style="width:100%; border-collapse: collapse;">
+            <tr><td style="padding:6px 0; border-bottom:1px solid var(--border);"><strong>Order:</strong></td><td style="padding:6px 0; border-bottom:1px solid var(--border);" id="modelOrder">SARIMA(1,1,1)(1,1,1,24)</td></tr>
+            <tr><td style="padding:6px 0; border-bottom:1px solid var(--border);"><strong>Train Period:</strong></td><td style="padding:6px 0; border-bottom:1px solid var(--border);" id="trainPeriod">2015-2017</td></tr>
+            <tr><td style="padding:6px 0;"><strong>Test Period:</strong></td><td style="padding:6px 0;" id="testPeriod">2018</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <h3 style="margin:0 0 10px; font-weight: bold;">Performance Metrics</h3>
+          <div class="metrics-grid">
+            <div class="metrics-col">
+              <div class="metrics-col-header">Overall</div>
+              <table>
+                <tbody>
+                  <tr><td>MAE</td><td style="font-weight: bold;">11,526.0</td></tr>
+                  <tr><td>RMSE</td><td style="font-weight: bold;">13,361.7</td></tr>
+                  <tr><td>MAPE (%)</td><td>19.56</td></tr>
+                  <tr><td>sMAPE (%)</td><td>18.42</td></tr>
+                  <tr><td>R²</td><td style="font-weight: bold;">-0.847</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="metrics-col">
+              <div class="metrics-col-header">Peak</div>
+              <table>
+                <tbody>
+                  <tr><td>MAE</td><td style="font-weight: bold;">14,823.5</td></tr>
+                  <tr><td>RMSE</td><td style="font-weight: bold;">17,245.3</td></tr>
+                  <tr><td>MAPE (%)</td><td>22.18</td></tr>
+                  <tr><td>sMAPE (%)</td><td>20.91</td></tr>
+                  <tr><td>R²</td><td style="font-weight: bold;">-1.234</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="figure">
-        <img data-modal="true" data-caption="01_time_series_overview.png" src="../assets/images/models/sarima/01_time_series_overview.png" alt="01_time_series_overview">
-        <div class="figcap"><p class="title">01_time_series_overview.png</p><p class="desc">Full series with train/test split.</p></div>
+      <!-- Key Visualizations -->
+      <div class="grid" style="margin-top: 20px;">
+
+        <!-- Train/Test Split -->
+        <div class="cardplot"
+             data-group="split"
+             data-title="Train/Test Split"
+             data-cap="Time series overview showing train and test period split.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Train/Test Split</div>
+              <div class="cardplot-sub">Full series with train/test period separation</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../assets/images/models/sarima/01_time_series_overview.png"
+                 alt="Train test split"
+                 data-modal="true"
+                 data-caption="Time series overview showing full series with train (2015-2017) and test (2018) period split for SARIMA model evaluation."/>
+          </div>
+        </div>
+
+        <!-- Seasonal Patterns -->
+        <div class="cardplot"
+             data-group="patterns"
+             data-title="Seasonal Patterns"
+             data-cap="Daily and weekly seasonality behavior analysis.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Seasonal Patterns</div>
+              <div class="cardplot-sub">Daily and weekly seasonality behavior</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../assets/images/models/sarima/05_seasonal_patterns.png"
+                 alt="Seasonal patterns"
+                 data-modal="true"
+                 data-caption="Seasonal patterns analysis showing daily and weekly seasonality behavior in electricity demand."/>
+          </div>
+        </div>
+
+        <!-- Forecasts Visualization -->
+        <div class="cardplot"
+             data-group="forecasts"
+             data-title="Forecasts vs Actual"
+             data-cap="SARIMA model predictions compared to actual demand across test horizon.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Forecasts vs Actual</div>
+              <div class="cardplot-sub">Model predictions compared to actual demand</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../assets/images/models/sarima/10_forecasts.png"
+                 alt="Forecasts visualization"
+                 data-modal="true"
+                 data-caption="SARIMA forecasts compared to actual demand showing full test period and zoomed view for detailed analysis."/>
+          </div>
+        </div>
+
+        <!-- Forecast Scatter -->
+        <div class="cardplot"
+             data-group="scatter"
+             data-title="Actual vs Predicted Scatter"
+             data-cap="Scatter plot showing relationship between actual and predicted values.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Actual vs Predicted Scatter</div>
+              <div class="cardplot-sub">Correlation and prediction accuracy</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../assets/images/models/sarima/11_forecast_scatter.png"
+                 alt="Forecast scatter"
+                 data-modal="true"
+                 data-caption="Scatter plot of actual vs predicted values showing the correlation and prediction accuracy of the SARIMA model."/>
+          </div>
+        </div>
+
+        <!-- Error Analysis -->
+        <div class="cardplot"
+             data-group="error"
+             data-title="Error Analysis"
+             data-cap="Error distribution and peak-specific error analysis.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Error Analysis</div>
+              <div class="cardplot-sub">Error distribution and peak errors</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../assets/images/models/sarima/12_error_analysis.png"
+                 alt="Error analysis"
+                 data-modal="true"
+                 data-caption="Error analysis showing error distribution and peak-specific error patterns for the SARIMA model."/>
+          </div>
+        </div>
+
       </div>
 
-      <div class="figure">
-        <img data-modal="true" data-caption="03_distribution_analysis.png" src="../assets/images/models/sarima/03_distribution_analysis.png" alt="03_distribution_analysis">
-        <div class="figcap"><p class="title">03_distribution_analysis.png</p><p class="desc">Load distribution and descriptive statistics.</p></div>
+      <!-- Model Summary -->
+      <div class="panel" style="margin-top: 20px;">
+        <h3 style="margin:0 0 10px; font-weight: bold;">Model Summary</h3>
+        <p class="muted" style="margin:0 0 12px; font-size: 0.9em; text-align: left; line-height: 1.6;">
+          SARIMA(1,1,1)(1,1,1,24) serves as a statistical baseline for hourly electricity demand forecasting. The model captures seasonal patterns and trends but shows high absolute error and negative R² (-0.847), indicating systematic bias. However, it achieves <strong id="dirAccSummary">82.89%</strong> directional accuracy, suggesting it tracks demand direction well despite magnitude errors.
+        </p>
+        <div class="directional-accuracy-card" id="directionalAccuracyCard" style="display:none;">
+          <div class="label">Directional Accuracy</div>
+          <div class="value" id="directionalAccuracyValue">–</div>
+      </div>
       </div>
 
-      <div class="figure">
-        <img data-modal="true" data-caption="04_seasonal_decomposition.png" src="../assets/images/models/sarima/04_seasonal_decomposition.png" alt="04_seasonal_decomposition">
-        <div class="figcap"><p class="title">04_seasonal_decomposition.png</p><p class="desc">Trend/seasonal/residual components.</p></div>
+      <div class="hero-actions" style="justify-content:center; margin-top:20px;">
+        <a class="btn" href="models.html"><i class="bi bi-arrow-left"></i>Models</a>
+        <a class="btn primary" href="explainability.html"><i class="bi bi-arrow-right"></i> Explainability</a>
       </div>
+    </section>
 
-      <div class="figure">
-        <img data-modal="true" data-caption="05_seasonal_patterns.png" src="../assets/images/models/sarima/05_seasonal_patterns.png" alt="05_seasonal_patterns">
-        <div class="figcap"><p class="title">05_seasonal_patterns.png</p><p class="desc">Daily and weekly seasonality behaviour.</p></div>
-      </div>
-
-      <div class="figure">
-        <img data-modal="true" data-caption="06_differencing.png" src="../assets/images/models/sarima/06_differencing.png" alt="06_differencing">
-        <div class="figcap"><p class="title">06_differencing.png</p><p class="desc">Stationarity preparation via differencing.</p></div>
-      </div>
-
-      <div class="figure">
-        <img data-modal="true" data-caption="07_acf_pacf_original.png" src="../assets/images/models/sarima/07_acf_pacf_original.png" alt="07_acf_pacf_original">
-        <div class="figcap"><p class="title">07_acf_pacf_original.png</p><p class="desc">Autocorrelation diagnostics for SARIMA orders.</p></div>
-      </div>
-
-      <div class="figure">
-        <img data-modal="true" data-caption="09_residual_analysis.png" src="../assets/images/models/sarima/09_residual_analysis.png" alt="09_residual_analysis">
-        <div class="figcap"><p class="title">09_residual_analysis.png</p><p class="desc">Residual checks.</p></div>
-      </div>
-
-      <div class="figure">
-        <img data-modal="true" data-caption="10_forecasts.png" src="../assets/images/models/sarima/10_forecasts.png" alt="10_forecasts">
-        <div class="figcap"><p class="title">10_forecasts.png</p><p class="desc">Forecast vs actual (full and zoomed).</p></div>
-      </div>
-
-      <div class="figure">
-        <img data-modal="true" data-caption="11_forecast_scatter.png" src="../assets/images/models/sarima/11_forecast_scatter.png" alt="11_forecast_scatter">
-        <div class="figcap"><p class="title">11_forecast_scatter.png</p><p class="desc">Actual vs predicted scatter.</p></div>
-      </div>
-
-      <div class="figure">
-        <img data-modal="true" data-caption="12_error_analysis.png" src="../assets/images/models/sarima/12_error_analysis.png" alt="12_error_analysis">
-        <div class="figcap"><p class="title">12_error_analysis.png</p><p class="desc">Error distribution and peak-specific errors.</p></div>
-      </div>
     </div>
-  </section>
 </main>
 
 <!-- Modal -->
-<div class="img-modal" id="imgModal" role="dialog" aria-modal="true" aria-label="Image preview">
-  <div class="img-modal-card">
-    <div class="img-modal-top">
-      <div class="cap" id="imgModalCap">Figure</div>
-      <button type="button" id="imgModalClose"><i class="bi bi-x-lg"></i> Close</button>
+<div class="modal-overlay" id="imgModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Plot viewer">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle">Plot</div>
+      <div class="modal-actions">
+        <button class="icon-round" id="prevBtn" aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+        <button class="icon-round" id="nextBtn" aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+        <button class="icon-round" id="closeBtn" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+      </div>
     </div>
-    <div class="img-modal-body">
-      <img id="imgModalImg" alt="Expanded figure" />
+    <div class="modal-body">
+      <img id="modalImg" alt="Expanded plot">
+      <div class="modal-cap" id="modalCap"></div>
     </div>
   </div>
 </div>
 
 <script>
-  function num(x){
-    const n = Number(x);
-    return Number.isFinite(n) ? n : null;
+  function toNum(x){ const n = Number(x); return Number.isFinite(n) ? n : null; }
+  function fmt(x, d=3){
+    if (x === null || x === undefined) return "N/A";
+    if (!Number.isFinite(x)) return "N/A";
+    return x.toFixed(d);
   }
-  function mean(arr){ return arr.reduce((a,b)=>a+b,0)/arr.length; }
-  function mae(y, yhat){ let s=0; for (let i=0;i<y.length;i++) s += Math.abs(y[i]-yhat[i]); return s/y.length; }
-  function rmse(y, yhat){ let s=0; for (let i=0;i<y.length;i++){ const e=y[i]-yhat[i]; s += e*e; } return Math.sqrt(s/y.length); }
+  function mae(y, yhat){ let s=0; for (let i=0;i<y.length;i++) s += Math.abs(y[i]-yhat[i]); return y.length ? s/y.length : null; }
+  function rmse(y, yhat){ let s=0; for (let i=0;i<y.length;i++){ const e=y[i]-yhat[i]; s += e*e; } return y.length ? Math.sqrt(s/y.length) : null; }
   function mape(y, yhat){
     let s=0, c=0;
     for (let i=0;i<y.length;i++){
-      if (y[i] === 0) continue;
-      s += Math.abs((y[i]-yhat[i]) / y[i]);
+      const denom = Math.abs(y[i]);
+      if (denom === 0) continue;
+      s += Math.abs((y[i]-yhat[i]) / denom);
       c++;
     }
     return c ? (s/c)*100 : null;
@@ -313,21 +622,38 @@
   function smape(y, yhat){
     let s=0, c=0;
     for (let i=0;i<y.length;i++){
-      const denom = (Math.abs(y[i])+Math.abs(yhat[i]));
+      const denom = (Math.abs(y[i]) + Math.abs(yhat[i]));
       if (denom === 0) continue;
-      s += 2*Math.abs(y[i]-yhat[i]) / denom;
+      s += (2*Math.abs(y[i]-yhat[i]) / denom);
       c++;
     }
     return c ? (s/c)*100 : null;
   }
   function r2(y, yhat){
-    const ybar = mean(y);
+    const n=y.length;
+    if (!n) return null;
+    const mean = y.reduce((a,b)=>a+b,0)/n;
     let ssRes=0, ssTot=0;
-    for (let i=0;i<y.length;i++){
+    for (let i=0;i<n;i++){
       const e=y[i]-yhat[i]; ssRes += e*e;
-      const d=y[i]-ybar; ssTot += d*d;
+      const d=y[i]-mean; ssTot += d*d;
     }
-    return ssTot === 0 ? null : (1 - (ssRes/ssTot));
+    if (ssTot === 0) return null;
+    return 1 - (ssRes/ssTot);
+  }
+  function directionalAccuracy(y, yhat){
+    if (y.length < 2 || yhat.length < 2) return null;
+    let correct = 0;
+    let total = 0;
+    for (let i=1; i<y.length; i++){
+      const actualDir = y[i] - y[i-1];
+      const predDir = yhat[i] - yhat[i-1];
+      if ((actualDir > 0 && predDir > 0) || (actualDir < 0 && predDir < 0) || (actualDir === 0 && predDir === 0)){
+        correct++;
+      }
+      total++;
+    }
+    return total > 0 ? (correct / total) * 100 : null;
   }
   function percentile(arr, p){
     const a = [...arr].sort((x,y)=>x-y);
@@ -337,107 +663,233 @@
     const w = idx-lo;
     return a[lo]*(1-w) + a[hi]*w;
   }
-  function fmt(n){
-    if (n === null || n === undefined || Number.isNaN(n)) return "";
-    return n.toLocaleString(undefined, { maximumFractionDigits: 3 });
-  }
 
-  // CSV parser that handles commas-less numeric csv (your file)
-  function parseCSV(text){
-    const lines = text.trim().split(/\r?\n/);
-    const header = lines[0].split(",").map(s => s.trim());
-    const rows = [];
-    for (let i=1; i<lines.length; i++){
-      if (!lines[i].trim()) continue;
-      const cols = lines[i].split(",").map(s => s.trim());
-      const obj = {};
-      header.forEach((h, idx) => obj[h] = cols[idx]);
-      rows.push(obj);
-    }
-    return rows;
-  }
+  // JSON metrics are available via the pill link, CSV metrics are computed below
 
-  async function computeSarima(){
-    const state = document.getElementById("mState");
-    const table = document.getElementById("mTable");
-    const body = document.getElementById("mBody");
+  async function loadCsvMetrics(){
+    const state = document.getElementById("csvState");
+    const tbl = document.getElementById("csvTable");
+    const kpis = document.getElementById("csvKpis");
 
     try{
       const res = await fetch("../assets/outputs/sarima/sarima_forecasts.csv", { cache: "no-store" });
       if (!res.ok) throw new Error("csv not found");
-      const txt = await res.text();
-      const rows = parseCSV(txt);
+      const text = await res.text();
 
-      const yy = [];
-      const yh = [];
-      for (const r of rows){
-        const a = num(r.actual);
-        const p = num(r.forecast);
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length < 2) throw new Error("CSV has no data rows");
+      
+      const header = lines[0].split(",").map(s => s.trim());
+      const idxActual = header.indexOf("actual");
+      const idxPred   = header.indexOf("forecast");
+
+      if (idxActual < 0 || idxPred < 0) throw new Error("Missing actual/forecast columns");
+
+      const yAll=[], yhatAll=[], yPeak=[], yhatPeak=[];
+      for (let i=1;i<lines.length;i++){
+        if (!lines[i].trim()) continue;
+        const cols = lines[i].split(",").map(s => s.trim());
+        // Handle leading empty column - actual should be at index 1, forecast at index 2
+        const a = toNum(cols[idxActual]);
+        const p = toNum(cols[idxPred]);
         if (a === null || p === null) continue;
-        yy.push(a); yh.push(p);
+
+        yAll.push(a); yhatAll.push(p);
       }
-      if (!yy.length) throw new Error("no rows");
+      
+      if (yAll.length === 0) throw new Error("No valid data rows found in CSV");
 
-      const bias = mean(yy.map((v,i)=> v - yh[i]));
-      const p90 = percentile(yy, 90);
-
-      const yp=[], yhp=[];
-      for (let i=0;i<yy.length;i++){
-        if (yy[i] >= p90){ yp.push(yy[i]); yhp.push(yh[i]); }
+      // Calculate p90 threshold for peak
+      const p90 = percentile(yAll, 90);
+      for (let i=0;i<yAll.length;i++){
+        if (yAll[i] >= p90){
+          yPeak.push(yAll[i]);
+          yhatPeak.push(yhatAll[i]);
+        }
       }
 
-      const rowsOut = [
-        ["Overall MAE", fmt(mae(yy,yh))],
-        ["Overall RMSE", fmt(rmse(yy,yh))],
-        ["Overall MAPE (%)", fmt(mape(yy,yh))],
-        ["Overall sMAPE (%)", fmt(smape(yy,yh))],
-        ["Overall R²", fmt(r2(yy,yh))],
-        ["Bias (mean actual − forecast)", fmt(bias)],
-        ["Peak threshold (p90 of actual)", fmt(p90)],
-        ["Peak MAE", fmt(mae(yp,yhp))],
-        ["Peak RMSE", fmt(rmse(yp,yhp))],
-        ["Peak MAPE (%)", fmt(mape(yp,yhp))],
-        ["Peak sMAPE (%)", fmt(smape(yp,yhp))],
-        ["Peak R²", fmt(r2(yp,yhp))],
-        ["Rows", fmt(yy.length)],
-        ["Peak rows", fmt(yp.length)]
+      const out = {
+        "Overall MAE": mae(yAll, yhatAll),
+        "Overall RMSE": rmse(yAll, yhatAll),
+        "Overall MAPE (%)": mape(yAll, yhatAll),
+        "Overall sMAPE (%)": smape(yAll, yhatAll),
+        "Overall R²": r2(yAll, yhatAll),
+        "Directional Accuracy": directionalAccuracy(yAll, yhatAll),
+        "Peak MAE": yPeak.length ? mae(yPeak, yhatPeak) : null,
+        "Peak RMSE": yPeak.length ? rmse(yPeak, yhatPeak) : null,
+        "Peak MAPE (%)": yPeak.length ? mape(yPeak, yhatPeak) : null,
+        "Peak sMAPE (%)": yPeak.length ? smape(yPeak, yhatPeak) : null,
+        "Peak R²": yPeak.length ? r2(yPeak, yhatPeak) : null,
+        "Rows used (overall)": yAll.length,
+        "Rows used (peak)": yPeak.length
+      };
+
+      document.getElementById("kpiMaeAll").textContent  = fmt(out["Overall MAE"]);
+      document.getElementById("kpiRmseAll").textContent = fmt(out["Overall RMSE"]);
+      document.getElementById("kpiMaePeak").textContent = fmt(out["Peak MAE"]);
+      document.getElementById("kpiRmsePeak").textContent= fmt(out["Peak RMSE"]);
+
+      // Display Directional Accuracy in summary card
+      const dirAcc = out["Directional Accuracy"];
+      if (dirAcc !== null && dirAcc !== undefined) {
+        document.getElementById("directionalAccuracyValue").textContent = fmt(dirAcc, 2) + "%";
+        document.getElementById("directionalAccuracyCard").style.display = "block";
+        const dirAccSummary = document.getElementById("dirAccSummary");
+        if (dirAccSummary) dirAccSummary.textContent = fmt(dirAcc, 2) + "%";
+      }
+
+      // Load model config from JSON
+      try {
+        const jsonRes = await fetch("../assets/outputs/sarima/sarima_metrics.json", { cache: "no-store" });
+        if (jsonRes.ok) {
+          const jsonData = await jsonRes.json();
+          if (jsonData.model_order && jsonData.model_seasonal_order) {
+            const orderEl = document.getElementById("modelOrder");
+            if (orderEl) orderEl.textContent = `SARIMA${jsonData.model_order}${jsonData.model_seasonal_order}`;
+          }
+          if (jsonData.train_period) {
+            const trainEl = document.getElementById("trainPeriod");
+            if (trainEl) {
+              const period = jsonData.train_period.split(" to ");
+              if (period.length === 2) {
+                const start = new Date(period[0]).getFullYear();
+                const end = new Date(period[1]).getFullYear();
+                trainEl.textContent = `${start}-${end}`;
+              }
+            }
+          }
+          if (jsonData.test_period) {
+            const testEl = document.getElementById("testPeriod");
+            if (testEl) {
+              const period = jsonData.test_period.split(" to ");
+              if (period.length > 0) {
+                const year = new Date(period[0]).getFullYear();
+                testEl.textContent = String(year);
+              }
+            }
+          }
+        }
+      } catch(e) {
+        console.log("Could not load model config from JSON");
+      }
+
+      // Overall metrics
+      const overallOrder = [
+        "Overall MAE",
+        "Overall RMSE",
+        "Overall MAPE (%)",
+        "Overall sMAPE (%)",
+        "Overall R²"
       ];
+      const overallBody = document.getElementById("csvBodyOverall");
+      overallBody.innerHTML = overallOrder.map((k) => {
+        const v = out[k];
+        const show = (typeof v === "number") ? (Number.isInteger(v) ? String(v) : fmt(v)) : "N/A";
+        const metricName = k.replace("Overall ", "");
+        const isBold = metricName.includes("MAE") || metricName.includes("RMSE") || metricName.includes("R²");
+        const valueCell = isBold ? `<td style="font-weight: bold;">${show}</td>` : `<td>${show}</td>`;
+        return `<tr><td>${metricName}</td>${valueCell}</tr>`;
+      }).join("");
 
-      body.innerHTML = rowsOut.map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
+      // Peak metrics
+      const peakOrder = [
+        "Peak MAE",
+        "Peak RMSE",
+        "Peak MAPE (%)",
+        "Peak sMAPE (%)",
+        "Peak R²"
+      ];
+      const peakBody = document.getElementById("csvBodyPeak");
+      peakBody.innerHTML = peakOrder.map((k) => {
+        const v = out[k];
+        const show = (typeof v === "number") ? (Number.isInteger(v) ? String(v) : fmt(v)) : "N/A";
+        const metricName = k.replace("Peak ", "");
+        const isBold = metricName.includes("MAE") || metricName.includes("RMSE") || metricName.includes("R²");
+        const valueCell = isBold ? `<td style="font-weight: bold;">${show}</td>` : `<td>${show}</td>`;
+        return `<tr><td>${metricName}</td>${valueCell}</tr>`;
+      }).join("");
+
       state.style.display = "none";
-      table.style.display = "table";
+      kpis.style.display = "grid";
+      tbl.style.display = "grid";
+      const metricsLoading = document.getElementById("metricsLoading");
+      if (metricsLoading) metricsLoading.style.display = "none";
     }catch(e){
-      state.textContent = "Could not compute SARIMA metrics. Ensure the forecasts CSV exists in assets/outputs/sarima.";
+      console.error("SARIMA CSV load error:", e);
+      if (state) state.textContent = "Could not compute SARIMA metrics from CSV: " + e.message;
     }
   }
 
-  function initImageModal(){
-    const modal = document.getElementById("imgModal");
-    const modalImg = document.getElementById("imgModalImg");
-    const modalCap = document.getElementById("imgModalCap");
-    const closeBtn = document.getElementById("imgModalClose");
+  // Modal setup with navigation
+  const modal = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalCap = document.getElementById('modalCap');
+  const closeBtn = document.getElementById('closeBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
 
-    function open(src, cap){
-      modalImg.src = src;
-      modalCap.textContent = cap || "Figure";
-      modal.classList.add("open");
-    }
-    function close(){
-      modal.classList.remove("open");
-      modalImg.src = "";
-    }
+  let visibleCards = [];
+  let currentIndex = 0;
 
-    document.querySelectorAll('img[data-modal="true"]').forEach((img) => {
-      img.addEventListener("click", () => open(img.getAttribute("src"), img.getAttribute("data-caption")));
+  function refreshVisibleCards(){
+    visibleCards = Array.from(document.querySelectorAll('.cardplot'));
+  }
+
+  function openModalByIndex(i){
+    refreshVisibleCards();
+    currentIndex = Math.max(0, Math.min(i, visibleCards.length - 1));
+    const c = visibleCards[currentIndex];
+    const img = c.querySelector('img[data-modal="true"]');
+    if (img) {
+      modalImg.src = img.getAttribute('src');
+      modalTitle.textContent = c.dataset.title || 'Plot';
+      modalCap.textContent = img.getAttribute('data-caption') || c.dataset.cap || '';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    modalImg.src = '';
+  }
+  function nextImg(){ 
+    refreshVisibleCards();
+    if (visibleCards.length > 0) {
+      openModalByIndex((currentIndex + 1) % visibleCards.length); 
+    }
+  }
+  function prevImg(){ 
+    refreshVisibleCards();
+    if (visibleCards.length > 0) {
+      openModalByIndex((currentIndex - 1 + visibleCards.length) % visibleCards.length); 
+    }
+  }
+
+  document.querySelectorAll('.cardplot img[data-modal="true"]').forEach((img, idx) => {
+    img.style.cursor = "zoom-in";
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = img.closest('.cardplot');
+      const cardIndex = Array.from(document.querySelectorAll('.cardplot')).indexOf(card);
+      openModalByIndex(cardIndex);
     });
+  });
 
-    closeBtn.addEventListener("click", close);
-    modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
-  }
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (nextBtn) nextBtn.addEventListener('click', nextImg);
+  if (prevBtn) prevBtn.addEventListener('click', prevImg);
+  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-  computeSarima();
-  initImageModal();
+  document.addEventListener('keydown', (e) => {
+    if (!modal || !modal.classList.contains('open')) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowRight') nextImg();
+    if (e.key === 'ArrowLeft') prevImg();
+  });
+
+  loadCsvMetrics();
 </script>
 
 <script src="../assets/app.js"></script>

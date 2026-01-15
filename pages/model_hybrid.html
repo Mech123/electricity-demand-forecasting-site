@@ -334,7 +334,7 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
-    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
+    <img src="../saved_model_outputs/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
   <div class="topbar-center">EurGrid</div>
 </header>
@@ -346,7 +346,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../Short Term Electricity Demand Forecasting.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="problem.html"><i class="bi bi-bullseye"></i> Understanding the Problem</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -369,7 +369,7 @@
 
   <!-- HERO -->
   <section class="card" style="text-align:center; position: relative;">
-    <img src="../assets/images/models/hybrid/hybrid.jpeg" alt="Hybrid Model" style="position: absolute; right: 20px; top: 18px; width: 300px; height: 260px; max-height: 1050px; border-radius: 8px; object-fit: contain; z-index: 1;">
+    <img src="../saved_model_outputs/hybrid_outputs/hybrid.jpeg" alt="Hybrid Model" style="position: absolute; right: 20px; top: 18px; width: 300px; height: 260px; max-height: 1050px; border-radius: 8px; object-fit: contain; z-index: 1;">
     <h1 style="font-weight: bold; font-size: 2.2em; text-align: center;">Hybrid Model</h1>
     <p class="muted" style="font-size: 0.9em; text-align: center;">
       SARIMA + LSTM Residual Correction
@@ -387,10 +387,10 @@
     </div>
 
     <div class="pill-row">
-      <a class="pill" href="../assets/outputs/hybrid/metrics_hybrid.json" target="_blank" rel="noopener">
+      <a class="pill" href="../saved_model_outputs/hybrid_outputs/metrics_hybrid.json" target="_blank" rel="noopener">
         <i class="bi bi-braces"></i> Metrics JSON
       </a>
-      <a class="pill" href="../assets/outputs/hybrid/hybrid_predictions.csv" target="_blank" rel="noopener">
+      <a class="pill" href="../saved_model_outputs/hybrid_outputs/hybrid_predictions.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Predictions CSV
       </a>
       <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/hybrid_model.ipynb" target="_blank" rel="noopener">
@@ -431,7 +431,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/hybrid/training_history_hybrid.png"
+                 src="../saved_model_outputs/hybrid_outputs/training_history_hybrid.png"
                  alt="Training history"
                  data-modal="true"
                  data-caption="Hybrid residual LSTM training history showing convergence and stability while learning residual corrections."/>
@@ -451,7 +451,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/hybrid/predictions_visualization_hybrid.png"
+                 src="../saved_model_outputs/hybrid_outputs/predictions_visualization_hybrid.png"
                  alt="Predictions visualization"
                  data-modal="true"
                  data-caption="Hybrid actual vs predicted visualization showing baseline + residual correction behavior across the test horizon."/>
@@ -471,10 +471,190 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/hybrid/peak_pr_curve.png"
+                 src="../saved_model_outputs/hybrid_outputs/peak_pr_curve.png"
                  alt="Peak PR Curve"
                  data-modal="true"
                  data-caption="Peak Detection Precision-Recall Curve comparing SARIMA and Hybrid models for peak-load detection (p90 threshold)."/>
+          </div>
+        </div>
+
+        <!-- Data Split Visualization -->
+        <div class="cardplot"
+             data-group="data-split"
+             data-title="Train/Validation/Test Data Split"
+             data-cap="Full time series with train/val/test splits and zoomed view showing chronological partitioning.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Data Split Visualization</div>
+              <div class="cardplot-sub">Train/Val/Test chronological partitioning</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/hybrid_outputs/01_data_split_visualization.png"
+                 alt="Data split visualization"
+                 data-modal="true"
+                 data-caption="Train/Validation/Test data split showing full time series and zoomed view with chronological partitioning."/>
+          </div>
+        </div>
+
+        <!-- SARIMA Diagnostics -->
+        <div class="cardplot"
+             data-group="diagnostics"
+             data-title="SARIMA Diagnostics"
+             data-cap="SARIMA fitted values vs actual (training) and forecast vs actual (test) with residuals distribution.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">SARIMA Diagnostics</div>
+              <div class="cardplot-sub">Fitted values, forecasts, and residuals analysis</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/hybrid_outputs/02_sarima_diagnostics.png"
+                 alt="SARIMA diagnostics"
+                 data-modal="true"
+                 data-caption="SARIMA diagnostics: fitted values on training data, forecasts on test data, and residuals distribution showing systematic underprediction."/>
+          </div>
+        </div>
+
+        <!-- Residual Analysis -->
+        <div class="cardplot"
+             data-group="diagnostics"
+             data-title="Residual Analysis"
+             data-cap="Residual targets and feature scaling visualization for LSTM residual correction model.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Residual Analysis</div>
+              <div class="cardplot-sub">Residual targets and feature scaling</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/hybrid_outputs/03_residual_analysis.png"
+                 alt="Residual analysis"
+                 data-modal="true"
+                 data-caption="Residual analysis: visualization of residual targets and feature scaling for the LSTM residual correction component."/>
+          </div>
+        </div>
+
+        <!-- Performance Comparison -->
+        <div class="cardplot"
+             data-group="performance"
+             data-title="Performance Comparison: SARIMA vs Hybrid"
+             data-cap="Overall and peak load performance comparison with error distribution analysis.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Performance Comparison</div>
+              <div class="cardplot-sub">SARIMA vs Hybrid overall and peak performance</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/hybrid_outputs/04_performance_comparison.png"
+                 alt="Performance comparison"
+                 data-modal="true"
+                 data-caption="Performance comparison: SARIMA vs Hybrid showing overall metrics, peak load metrics, and error distributions."/>
+          </div>
+        </div>
+
+        <!-- Prediction Summary -->
+        <div class="cardplot"
+             data-group="predictions"
+             data-title="Prediction Summary Statistics"
+             data-cap="Distribution, box plot, summary statistics, and residuals vs predicted values comparison.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Prediction Summary</div>
+              <div class="cardplot-sub">Distribution, statistics, and residual analysis</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/hybrid_outputs/05_prediction_summary.png"
+                 alt="Prediction summary"
+                 data-modal="true"
+                 data-caption="Prediction summary: distribution comparison, box plots, summary statistics, and residuals vs predicted values showing systematic underprediction."/>
+          </div>
+        </div>
+
+        <!-- Comprehensive Metrics -->
+        <div class="cardplot"
+             data-group="performance"
+             data-title="Comprehensive Performance Metrics"
+             data-cap="Hybrid model performance metrics including MAE, RMSE, MAPE, MASE, R², and directional accuracy.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Comprehensive Metrics</div>
+              <div class="cardplot-sub">All performance metrics visualization</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/hybrid_outputs/06_comprehensive_metrics.png"
+                 alt="Comprehensive metrics"
+                 data-modal="true"
+                 data-caption="Comprehensive performance metrics: MAE, RMSE, MAPE, MASE, R², directional accuracy, and error distribution."/>
+          </div>
+        </div>
+
+        <!-- Peak vs Non-Peak Analysis -->
+        <div class="cardplot"
+             data-group="peak"
+             data-title="Peak vs Non-Peak Performance Analysis"
+             data-cap="Peak load performance summary comparing MAE/RMSE, load distribution, and error distribution for peak vs non-peak periods.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Peak vs Non-Peak Analysis</div>
+              <div class="cardplot-sub">Performance comparison during peak and normal periods</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/hybrid_outputs/07_peak_vs_nonpeak_analysis.png"
+                 alt="Peak vs non-peak analysis"
+                 data-modal="true"
+                 data-caption="Peak vs Non-Peak performance analysis: comparing metrics, load distribution, and error patterns for peak (p90+) and non-peak periods."/>
+          </div>
+        </div>
+
+        <!-- Critical Peak Analysis -->
+        <div class="cardplot"
+             data-group="peak"
+             data-title="Critical Peak Load Performance"
+             data-cap="Critical peak predictions (Hour=10, Load≥p90) comparing SARIMA vs Hybrid with scatter plots, error distribution, and performance metrics.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Critical Peak Analysis</div>
+              <div class="cardplot-sub">SARIMA vs Hybrid for critical peak loads</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/hybrid_outputs/08_critical_peak_analysis.png"
+                 alt="Critical peak analysis"
+                 data-modal="true"
+                 data-caption="Critical peak load performance: comparing SARIMA and Hybrid models for critical peaks (Hour=10, Load≥p90) with scatter plots, error distributions, and metrics."/>
+          </div>
+        </div>
+
+        <!-- Time Series: Actual vs SARIMA vs Hybrid -->
+        <div class="cardplot"
+             data-group="predictions"
+             data-title="Actual vs SARIMA vs Hybrid (30 Days)"
+             data-cap="30-day aligned test window comparison showing actual load, SARIMA predictions, and Hybrid predictions with daily seasonality patterns.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Time Series Comparison</div>
+              <div class="cardplot-sub">Actual vs SARIMA vs Hybrid (30 days)</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/hybrid_outputs/hybrid_timeseries_first30days.png"
+                 alt="Time series comparison"
+                 data-modal="true"
+                 data-caption="Actual vs SARIMA vs Hybrid: 30-day aligned test window showing daily seasonality and model performance comparison."/>
           </div>
         </div>
 
@@ -599,7 +779,7 @@
     const body = document.getElementById("metricsBody");
 
     try{
-      const res = await fetch("../assets/outputs/hybrid/metrics_hybrid.json", { cache: "no-store" });
+      const res = await fetch("../saved_model_outputs/hybrid_outputs/metrics_hybrid.json", { cache: "no-store" });
       if (!res.ok) throw new Error("json not found");
       const data = await res.json();
 
@@ -624,7 +804,7 @@
     const kpis = document.getElementById("csvKpis");
 
     try{
-      const res = await fetch("../assets/outputs/hybrid/hybrid_predictions.csv", { cache: "no-store" });
+      const res = await fetch("../saved_model_outputs/hybrid_outputs/hybrid_predictions.csv", { cache: "no-store" });
       if (!res.ok) throw new Error("csv not found");
       const text = await res.text();
 

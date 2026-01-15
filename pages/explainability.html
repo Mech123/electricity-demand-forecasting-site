@@ -447,7 +447,7 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
-    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
+    <img src="../saved_model_outputs/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
   <div class="topbar-center">EurGrid</div>
 </header>
@@ -482,11 +482,11 @@
 
   <!-- HERO -->
   <section class="card" style="text-align:center;">
-    <h1 style="font-weight: bold; font-size: 2.2em; text-align: center;">Model Explainability</h1>
-    <p class="muted" style="font-size: 0.9em; text-align: center;">
+    <h1 id="heroTitle" style="font-weight: bold; font-size: 2.2em; text-align: center;">LSTM Model Explainability</h1>
+    <p id="heroSubtitle" class="muted" style="font-size: 0.9em; text-align: center;">
       Explainable AI (XAI) using SHAP Values
     </p>
-    <p class="muted" style="font-size: 0.85em; text-align: center; margin-top: 8px;">
+    <p id="heroDescription" class="muted" style="font-size: 0.85em; text-align: center; margin-top: 8px;">
       Understanding how models make predictions through SHAP (SHapley Additive exPlanations) analysis.<br>
       Explore global feature importance, local explanations, and scenario-based insights for each model.
     </p>
@@ -504,7 +504,7 @@
   </section>
 
   <!-- Introduction -->
-  <section class="card">
+  <section class="card" id="whyExplainabilityCard">
     <h2 style="font-weight: bold; font-size: 1.5em;">Why Explainability Matters</h2>
     <p class="muted" style="text-align: left; line-height: 1.6;">
       Machine learning models, especially deep learning models like LSTM, are powerful but often act as "black boxes." SHAP values provide interpretable explanations by quantifying each feature's contribution to individual predictions. This helps grid operators understand model decisions, identify important factors, and build trust in automated forecasting systems.
@@ -521,7 +521,7 @@
 
     <div class="instance-selector">
       <label><strong>Select Date & Time:</strong></label>
-      <input type="date" id="instanceDate" value="2018-01-02" min="2018-01-01" max="2018-09-30">
+      <input type="date" id="instanceDate" value="2018-01-02" min="2015-01-08" max="2018-09-30">
       <select id="instanceHour">
         <option value="0">00:00</option>
         <option value="1">01:00</option>
@@ -548,7 +548,10 @@
         <option value="22">22:00</option>
         <option value="23">23:00</option>
       </select>
-      <button onclick="loadInstanceExplanation()" id="explainBtn"><i class="bi bi-search"></i> Explain This Prediction</button>
+      <button onclick="loadInstanceExplanation()" id="explainBtn"><i class="bi bi-search"></i> Predict Load</button>
+      <p class="muted" style="margin: 10px 0 0 0; font-size: 0.85em; text-align: center;">
+        Date and Time Available: 2015-01-08 → 2018-09-30
+      </p>
     </div>
 
     <div id="loadingState" class="muted" style="text-align:center; padding:20px; display:none;">
@@ -589,13 +592,6 @@
         </div>
       </div>
     </div>
-    
-    <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: left;">
-      <p style="margin: 0 0 10px; font-weight: bold;">Hardcoded dates/times available:</p>
-      <p style="margin: 0; font-size: 0.9em; color: #666;">
-        2018-01-02 00:00:00+00:00, 2018-01-02 08:00:00+00:00, 2018-01-02 10:00:00+00:00, 2018-01-03 09:00:00+00:00, 2018-01-03 10:00:00+00:00, 2018-02-02 07:00:00+00:00, 2018-03-10 16:00:00+00:00, 2018-09-19 08:00:00+00:00
-      </p>
-    </div>
   </section>
 
   <!-- Global Feature Importance -->
@@ -618,7 +614,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_summary_plot.png"
+               src="../saved_model_outputs/lstm_outputs/shap_summary_plot.png"
                alt="SHAP Summary Plot"
                data-modal="true"
                data-caption="SHAP summary plot showing global feature importance. Features are ranked by mean absolute SHAP value. Color indicates feature value (red=high, blue=low), and horizontal position shows impact on prediction."/>
@@ -638,7 +634,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_bar_plot.png"
+               src="../saved_model_outputs/lstm_outputs/shap_bar_plot.png"
                alt="SHAP Bar Plot"
                data-modal="true"
                data-caption="SHAP bar plot ranking features by mean absolute SHAP value. Higher bars indicate features with greater overall impact on model predictions."/>
@@ -658,7 +654,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_partial_dependence.png"
+               src="../saved_model_outputs/lstm_outputs/shap_partial_dependence.png"
                alt="Partial Dependence"
                data-modal="true"
                data-caption="Partial dependence plots showing how model predictions change as individual feature values vary, holding other features constant."/>
@@ -667,93 +663,7 @@
 
     </div>
 
-    <!-- Top Features Table -->
-    <div class="panel" style="margin-top: 20px; text-align: left;">
-      <h3 style="margin:0 0 10px; font-weight: bold;">Top 20 Features by Mean |SHAP| Value</h3>
-      <p class="muted" style="margin:0 0 12px; font-size: 0.9em;">
-        Features ranked by mean absolute SHAP value, indicating overall impact on predictions. Higher values indicate greater importance.
-      </p>
-      <table class="shap-table">
-        <thead>
-          <tr>
-            <th class="feature-rank">Rank</th>
-            <th>Feature</th>
-            <th style="text-align: right;">Mean |SHAP|</th>
-            <th style="text-align: right;">Mean SHAP</th>
-            <th style="text-align: right;">Std SHAP</th>
-          </tr>
-        </thead>
-        <tbody id="topFeaturesTable">
-          <tr><td>1</td><td class="feature-name">DE_50hertz_load_actual</td><td class="shap-value" style="text-align: right;">0.000571</td><td style="text-align: right;">0.000441</td><td style="text-align: right;">0.000932</td></tr>
-          <tr><td>2</td><td class="feature-name">DE_amprion_load_actual</td><td class="shap-value" style="text-align: right;">0.000502</td><td style="text-align: right;">-0.000021</td><td style="text-align: right;">0.000925</td></tr>
-          <tr><td>3</td><td class="feature-name">DE_tennet_load_actual</td><td class="shap-value" style="text-align: right;">0.000370</td><td style="text-align: right;">-0.000107</td><td style="text-align: right;">0.000800</td></tr>
-          <tr><td>4</td><td class="feature-name">DE_transnetbw_load_actual</td><td class="shap-value" style="text-align: right;">0.000306</td><td style="text-align: right;">-0.000106</td><td style="text-align: right;">0.000710</td></tr>
-          <tr><td>5</td><td class="feature-name">target_load_rolling_mean_3</td><td class="shap-value" style="text-align: right;">0.000158</td><td style="text-align: right;">0.000025</td><td style="text-align: right;">0.000461</td></tr>
-          <tr><td>6</td><td class="feature-name">target_load_ema_6</td><td class="shap-value" style="text-align: right;">0.000134</td><td style="text-align: right;">-0.000025</td><td style="text-align: right;">0.000422</td></tr>
-          <tr><td>7</td><td class="feature-name">DE_tennet_wind_onshore_generation</td><td class="shap-value" style="text-align: right;">0.000127</td><td style="text-align: right;">-0.000014</td><td style="text-align: right;">0.000485</td></tr>
-          <tr><td>8</td><td class="feature-name">target_load_lag_1</td><td class="shap-value" style="text-align: right;">0.000120</td><td style="text-align: right;">-0.000005</td><td style="text-align: right;">0.000462</td></tr>
-          <tr><td>9</td><td class="feature-name">target_load_same_hour_last_week</td><td class="shap-value" style="text-align: right;">0.000115</td><td style="text-align: right;">-0.000024</td><td style="text-align: right;">0.000408</td></tr>
-          <tr><td>10</td><td class="feature-name">is_monday</td><td class="shap-value" style="text-align: right;">0.000112</td><td style="text-align: right;">0.000043</td><td style="text-align: right;">0.000383</td></tr>
-          <tr><td>11</td><td class="feature-name">is_weekend</td><td class="shap-value" style="text-align: right;">0.000111</td><td style="text-align: right;">0.000016</td><td style="text-align: right;">0.000417</td></tr>
-          <tr><td>12</td><td class="feature-name">target_load_rolling_mean_12</td><td class="shap-value" style="text-align: right;">0.000107</td><td style="text-align: right;">0.000048</td><td style="text-align: right;">0.000420</td></tr>
-          <tr><td>13</td><td class="feature-name">target_load_ema_24</td><td class="shap-value" style="text-align: right;">0.000106</td><td style="text-align: right;">-0.000004</td><td style="text-align: right;">0.000431</td></tr>
-          <tr><td>14</td><td class="feature-name">target_load_rolling_std_12</td><td class="shap-value" style="text-align: right;">0.000105</td><td style="text-align: right;">-0.000008</td><td style="text-align: right;">0.000393</td></tr>
-          <tr><td>15</td><td class="feature-name">DE_transnetbw_wind_onshore_generation</td><td class="shap-value" style="text-align: right;">0.000105</td><td style="text-align: right;">-0.000013</td><td style="text-align: right;">0.000423</td></tr>
-          <tr><td>16</td><td class="feature-name">solar_proxy</td><td class="shap-value" style="text-align: right;">0.000104</td><td style="text-align: right;">-0.000010</td><td style="text-align: right;">0.000434</td></tr>
-          <tr><td>17</td><td class="feature-name">time_of_day_Evening</td><td class="shap-value" style="text-align: right;">0.000100</td><td style="text-align: right;">-0.000014</td><td style="text-align: right;">0.000408</td></tr>
-          <tr><td>18</td><td class="feature-name">target_load_rolling_std_3</td><td class="shap-value" style="text-align: right;">0.000099</td><td style="text-align: right;">-0.000031</td><td style="text-align: right;">0.000339</td></tr>
-          <tr><td>19</td><td class="feature-name">is_friday</td><td class="shap-value" style="text-align: right;">0.000097</td><td style="text-align: right;">-0.000021</td><td style="text-align: right;">0.000379</td></tr>
-          <tr><td>20</td><td class="feature-name">cloud_cover_pop_wtd</td><td class="shap-value" style="text-align: right;">0.000094</td><td style="text-align: right;">-0.000024</td><td style="text-align: right;">0.000435</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Feature Groups Summary -->
-    <div class="grid-2" style="margin-top: 20px;">
-      <div class="panel" style="text-align: left;">
-        <h3 style="margin:0 0 10px; font-weight: bold;">Feature Groups Summary</h3>
-        <table style="width:100%; border-collapse: collapse;">
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:8px 0;"><strong>Load Features</strong></td>
-            <td style="padding:8px 0; text-align: right;" class="shap-value">0.0016</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:8px 0;"><strong>Lagged Features</strong></td>
-            <td style="padding:8px 0; text-align: right;" class="shap-value">0.0005</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:8px 0;"><strong>Rolling Statistics</strong></td>
-            <td style="padding:8px 0; text-align: right;" class="shap-value">0.0005</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:8px 0;"><strong>Calendar Features</strong></td>
-            <td style="padding:8px 0; text-align: right;" class="shap-value">0.0004</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:8px 0;"><strong>Weather Proxies</strong></td>
-            <td style="padding:8px 0; text-align: right;" class="shap-value">0.0002</td>
-          </tr>
-          <tr>
-            <td style="padding:8px 0;"><strong>Generation Features</strong></td>
-            <td style="padding:8px 0; text-align: right;" class="shap-value">0.0006</td>
-          </tr>
-        </table>
-        <p class="muted" style="margin-top:12px; font-size: 0.85em;">
-          Aggregated mean |SHAP| values by feature category. Load features (regional load data) dominate, followed by generation features and lagged/rolling statistics.
-        </p>
-      </div>
-      <div class="panel" style="text-align: left;">
-        <h3 style="margin:0 0 10px; font-weight: bold;">Key Feature Insights</h3>
-        <ul style="margin:0; padding-left:20px; line-height: 1.8;">
-          <li><strong>Regional Load Data:</strong> Top 4 features are regional load measurements (mean |SHAP|: 0.0003-0.0006)</li>
-          <li><strong>Historical Patterns:</strong> Lag-1 and same-hour-last-week are critical (mean |SHAP|: ~0.0001)</li>
-          <li><strong>Rolling Statistics:</strong> 3-hour and 12-hour rolling means show high importance</li>
-          <li><strong>Calendar Signals:</strong> Day-of-week flags (Monday, Friday, Weekend) impact predictions</li>
-          <li><strong>Weather Impact:</strong> Solar proxy and cloud cover contribute moderately</li>
-          <li><strong>Low Impact:</strong> Some features (holidays, LU region) have zero SHAP values</li>
-        </ul>
-      </div>
-    </div>
+    
   </section>
 
   <!-- Local Explanations -->
@@ -776,7 +686,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_waterfall_peak_load.png"
+               src="../saved_model_outputs/lstm_outputs/shap_waterfall_peak_load.png"
                alt="Waterfall Peak Load"
                data-modal="true"
                data-caption="Waterfall plot for a peak-load prediction. Shows how each feature contributes to the final prediction, starting from the base value and adding feature contributions."/>
@@ -796,7 +706,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_waterfall_normal_load.png"
+               src="../saved_model_outputs/lstm_outputs/shap_waterfall_normal_load.png"
                alt="Waterfall Normal Load"
                data-modal="true"
                data-caption="Waterfall plot for a normal-load prediction, showing feature contributions for typical demand conditions."/>
@@ -816,7 +726,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_waterfall_low_load.png"
+               src="../saved_model_outputs/lstm_outputs/shap_waterfall_low_load.png"
                alt="Waterfall Low Load"
                data-modal="true"
                data-caption="Waterfall plot for a low-load prediction, showing which features contribute to lower demand forecasts."/>
@@ -846,7 +756,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_peak_vs_normal.png"
+               src="../saved_model_outputs/lstm_outputs/shap_peak_vs_normal.png"
                alt="Peak vs Normal"
                data-modal="true"
                data-caption="Comparison of SHAP values for peak-load vs normal-load periods, showing how feature importance shifts during high-demand scenarios."/>
@@ -866,7 +776,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_weekday_vs_weekend.png"
+               src="../saved_model_outputs/lstm_outputs/shap_weekday_vs_weekend.png"
                alt="Weekday vs Weekend"
                data-modal="true"
                data-caption="SHAP value comparison between weekday and weekend predictions, revealing how operational patterns differ across days of the week."/>
@@ -886,7 +796,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_error_analysis.png"
+               src="../saved_model_outputs/lstm_outputs/shap_error_analysis.png"
                alt="Error Analysis"
                data-modal="true"
                data-caption="SHAP analysis of prediction errors, identifying which features contribute to model mistakes and helping diagnose failure modes."/>
@@ -916,7 +826,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_by_hour.png"
+               src="../saved_model_outputs/lstm_outputs/shap_by_hour.png"
                alt="SHAP by Hour"
                data-modal="true"
                data-caption="SHAP values aggregated by hour of day, showing how feature importance changes throughout the 24-hour cycle."/>
@@ -936,7 +846,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../Gagan/lstm_outputs/shap_heatmap.png"
+               src="../saved_model_outputs/lstm_outputs/shap_heatmap.png"
                alt="SHAP Heatmap"
                data-modal="true"
                data-caption="Temporal heatmap of SHAP values, visualizing how feature contributions evolve over the time series, revealing patterns and anomalies."/>
@@ -966,6 +876,251 @@
 
   <!-- Hybrid Section -->
   <div id="hybrid-section" class="model-section">
+
+  <!-- Hybrid Overview -->
+  <section class="card" style="text-align:center;">
+    <p class="muted" style="max-width: 980px; margin: 0 auto; line-height: 1.7;">
+      <strong>How to read:</strong> SHAP values to the <strong>right</strong> push the prediction higher, to the <strong>left</strong> push it lower.
+      A <strong>wider spread</strong> means that feature has <strong>more influence</strong>. Color shows the feature value (red = high, blue = low).
+    </p>
+  </section>
+
+  <!-- Global SHAP plots -->
+  <section class="card" style="text-align:center;">
+    <h2 style="font-weight: bold; font-size: 1.5em;">Global Feature Importance</h2>
+    <p class="muted">Click any image to zoom.</p>
+
+    <div class="grid" style="margin-top: 20px;">
+
+      <!-- SHAP Summary -->
+      <div class="cardplot"
+           data-group="hybrid"
+           data-title="SHAP Summary: Hybrid Model Components (SARIMA Prediction vs Residual Correction)"
+           data-cap="SHAP summary plot showing how SARIMA baseline and residual corrections contribute to final predictions.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">SHAP Summary Plot</div>
+            <div class="cardplot-sub">SARIMA Prediction vs Residual Correction</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/hybrid_outputs/shap_hybrid_summary.png"
+               alt="SHAP Summary: Hybrid Model Components"
+               data-modal="true"
+               data-caption="SHAP Summary: Hybrid Model Components (SARIMA Prediction vs Residual Correction). Shows how sarima_pred and residual_pred contribute to the final hybrid prediction." />
+        </div>
+      </div>
+
+      <!-- Feature Importance Bar Chart -->
+      <div class="cardplot"
+           data-group="hybrid"
+           data-title="Feature Importance in Hybrid Model (Average absolute SHAP contribution)"
+           data-cap="Bar chart showing average absolute SHAP values for each feature component.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Feature Importance (Mean |SHAP|)</div>
+            <div class="cardplot-sub">Average absolute SHAP contribution</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/hybrid_outputs/shap_hybrid_bar.png"
+               alt="Feature Importance in Hybrid Model"
+               data-modal="true"
+               data-caption="Feature Importance in Hybrid Model (Average absolute SHAP contribution). Shows that sarima_pred dominates the predictions." />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Quick Interpretation -->
+    <div class="panel" style="margin-top:18px; text-align:left;">
+      <h3 style="margin:0 0 10px; font-weight:bold;">Quick Interpretation (What these plots mean)</h3>
+
+      <div style="line-height:1.8;">
+        <p style="margin: 8px 0;">
+          <strong>SARIMA Prediction (sarima_pred):</strong> This is the <strong>dominant feature</strong> with the highest SHAP values (mean |SHAP| ~4800).
+          It provides the baseline seasonal forecast and drives most of the prediction magnitude. High SARIMA predictions push the output higher, low predictions push it lower.
+        </p>
+        <p style="margin: 8px 0;">
+          <strong>Residual Correction (residual_pred):</strong> This feature has <strong>much smaller influence</strong> (mean |SHAP| ~250) but provides important fine-tuning.
+          The LSTM learns to correct SARIMA's errors, with high residual values typically reducing the prediction (inverse relationship) and low values increasing it.
+        </p>
+        <p style="margin: 8px 0;">
+          <strong>Key Insight:</strong> The Hybrid model is <strong>SARIMA-driven</strong> with <strong>LSTM corrections</strong>. The baseline forecast from SARIMA sets the scale, while the residual LSTM makes small but important adjustments to improve accuracy.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scenario-Based Comparisons -->
+  <section class="card" style="text-align:center;">
+    <h2 style="font-weight: bold; font-size: 1.5em;">Scenario-Based Analysis</h2>
+    <p class="muted" style="max-width: 980px; margin: 0 auto; line-height: 1.7;">
+      These comparisons show how feature importance changes across different scenarios: peak vs non-peak periods, weekday vs weekend, extreme weather conditions, and prediction accuracy levels.
+    </p>
+
+    <div class="grid" style="margin-top: 20px;">
+
+      <!-- Peak vs Non-Peak -->
+      <div class="cardplot"
+           data-group="hybrid-scenarios"
+           data-title="Mean |SHAP| (Residual LSTM): Peak (p90+) vs Non-peak"
+           data-cap="Feature importance comparison between peak-load periods and normal periods.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Peak vs Non-Peak Periods</div>
+            <div class="cardplot-sub">Feature importance during high vs normal demand</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/hybrid_outputs/shap_comparison_peak_p90+_vs_non-peak.png"
+               alt="Peak vs Non-Peak SHAP Comparison"
+               data-modal="true"
+               data-caption="Mean |SHAP| (Residual LSTM): Peak (p90+) vs Non-peak. Shows how feature contributions differ during peak-load periods compared to normal periods." />
+        </div>
+      </div>
+
+      <!-- Weekday vs Weekend -->
+      <div class="cardplot"
+           data-group="hybrid-scenarios"
+           data-title="Mean |SHAP| (Residual LSTM): Weekday vs Weekend"
+           data-cap="Feature importance comparison between weekdays and weekends.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Weekday vs Weekend</div>
+            <div class="cardplot-sub">Feature importance on weekdays vs weekends</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/hybrid_outputs/shap_comparison_weekday_vs_weekend.png"
+               alt="Weekday vs Weekend SHAP Comparison"
+               data-modal="true"
+               data-caption="Mean |SHAP| (Residual LSTM): Weekday vs Weekend. Reveals how feature contributions vary between weekday and weekend demand patterns." />
+        </div>
+      </div>
+
+      <!-- Extreme Heat vs Mild -->
+      <div class="cardplot"
+           data-group="hybrid-scenarios"
+           data-title="Mean |SHAP| (Residual LSTM): Extreme heat (top 5%) vs Mild (40-60%)"
+           data-cap="Feature importance during extreme heat conditions versus mild weather.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Extreme Heat vs Mild Weather</div>
+            <div class="cardplot-sub">Feature importance during extreme vs normal temperatures</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/hybrid_outputs/shap_comparison_extreme_heat_top_5_vs_mild_40–60.png"
+               alt="Extreme Heat vs Mild SHAP Comparison"
+               data-modal="true"
+               data-caption="Mean |SHAP| (Residual LSTM): Extreme heat (top 5%) vs Mild (40-60%). Shows how feature contributions change during extreme heat conditions that drive high cooling demand." />
+        </div>
+      </div>
+
+      <!-- Mispredicted vs Accurate -->
+      <div class="cardplot"
+           data-group="hybrid-scenarios"
+           data-title="Mean |SHAP| (Residual LSTM): Mispredicted (top 10% error) vs Accurate (bottom 10% error)"
+           data-cap="Feature importance comparison between high-error and low-error predictions.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Mispredicted vs Accurate</div>
+            <div class="cardplot-sub">Feature importance when model errs vs when it's accurate</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/hybrid_outputs/shap_comparison_mispredicted_top_10_error_vs_accurate_bottom_10_error.png"
+               alt="Mispredicted vs Accurate SHAP Comparison"
+               data-modal="true"
+               data-caption="Mean |SHAP| (Residual LSTM): Mispredicted (top 10% error) vs Accurate (bottom 10% error). Reveals which features are more influential when the model makes large errors versus accurate predictions." />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Scenario Analysis Summary -->
+    <div class="panel" style="margin-top:18px; text-align:left;">
+      <h3 style="margin:0 0 10px; font-weight:bold;">Scenario Analysis Insights</h3>
+
+      <div style="line-height:1.8;">
+        <p style="margin: 8px 0;">
+          <strong>Peak vs Non-Peak:</strong> During peak periods, <strong>sarima_pred</strong> becomes even more critical (SHAP ~7300 vs ~4500 in non-peak).
+          <strong>residual_pred</strong> shows slightly higher importance during non-peak periods, suggesting the LSTM correction is more active during normal conditions.
+        </p>
+        <p style="margin: 8px 0;">
+          <strong>Weekday vs Weekend:</strong> Most features show <strong>higher importance on weekends</strong>, particularly load-related features like <strong>DE_amprion_load_actual_entsoe_transparency</strong> and <strong>DE_50hertz_load_actual_entsoe_transparency</strong>.
+          This reflects the different demand patterns between weekdays and weekends.
+        </p>
+        <p style="margin: 8px 0;">
+          <strong>Extreme Heat:</strong> During extreme heat conditions, <strong>solar generation features</strong> (DE_50hertz_solar_generation_actual) show increased importance, as high temperatures drive both cooling demand and solar generation.
+          <strong>sarima_pred</strong> also shows higher contribution during extreme conditions.
+        </p>
+        <p style="margin: 8px 0;">
+          <strong>Mispredicted vs Accurate:</strong> When the model makes large errors, <strong>target_load_lag_24</strong> and <strong>DE_amprion_load_actual_entsoe_transparency</strong> show much higher SHAP values.
+          This suggests that <strong>historical load patterns</strong> are critical for accurate predictions, and their misalignment leads to prediction errors.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Waterfall Plot for Peak Prediction -->
+  <section class="card" style="text-align:center;">
+    <h2 style="font-weight: bold; font-size: 1.5em;">Peak Demand Prediction</h2>
+    <p class="muted" style="max-width: 980px; margin: 0 auto; line-height: 1.7;">
+      This waterfall plot shows how each feature contributes to a specific peak-load prediction, moving from the expected base value <strong>E[f(X)]</strong> to the final prediction <strong>f(x)</strong>.
+    </p>
+
+    <div class="grid" style="margin-top: 20px; grid-template-columns: 1fr;">
+      <div class="cardplot"
+           data-group="hybrid"
+           data-title="SHAP Waterfall: Peak Demand Prediction"
+           data-cap="Waterfall plot explaining a peak-load prediction, showing how SARIMA baseline and residual correction combine.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Peak Demand Waterfall</div>
+            <div class="cardplot-sub">Instance-level explanation for peak prediction</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/hybrid_outputs/shap_hybrid_waterfall_peak.png"
+               alt="SHAP Waterfall: Peak Demand Prediction"
+               data-modal="true"
+               data-caption="SHAP Waterfall: Peak Demand Prediction. Shows how sarima_pred and residual_pred contribute to push the prediction from the base value to the final output." />
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px; text-align:left;">
+      <h3 style="margin:0 0 10px; font-weight:bold;">Waterfall Interpretation</h3>
+      <ul style="margin:0; padding-left:18px; line-height:1.8;">
+        <li><strong>Base Value E[f(X)]:</strong> The expected prediction value before considering specific feature contributions.</li>
+        <li><strong>SARIMA Prediction Contribution:</strong> The largest contribution comes from <strong>sarima_pred</strong>, which pushes the prediction significantly higher (positive SHAP value).</li>
+        <li><strong>Residual Correction:</strong> The <strong>residual_pred</strong> makes a small positive adjustment, fine-tuning the final prediction.</li>
+        <li><strong>Final Prediction f(x):</strong> The sum of base value and all feature contributions gives the final hybrid prediction.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final Takeaway -->
+  <section class="card">
+    <div class="panel" style="text-align:left;">
+      <h3 style="margin:0 0 10px; font-weight:bold;">Key Insights from SHAP Analysis</h3>
+      <p style="margin:0; line-height:1.8;">
+        The Hybrid model is <strong>primarily driven by SARIMA baseline predictions</strong>, which provide the seasonal structure and magnitude.
+        The <strong>LSTM residual correction</strong> makes smaller but important adjustments, particularly during non-peak periods and when historical patterns are well-aligned.
+        During peak periods, SARIMA's influence becomes even stronger, while the residual correction remains relatively stable. This design leverages SARIMA's strength in capturing seasonality while using LSTM to learn and correct systematic errors.
+      </p>
+    </div>
+  </section>
+
   </div>
 
   <!-- Ensemble Section -->
@@ -974,11 +1129,7 @@
 
   <!-- Ensemble Overview -->
   <section class="card" style="text-align:center;">
-    <h2 style="font-weight: bold; font-size: 1.5em;">Ensemble Explainability (SHAP)</h2>
     <p class="muted" style="max-width: 980px; margin: 0 auto; line-height: 1.7;">
-      These SHAP plots explain <strong>which base model prediction drives the ensemble</strong>.
-      All ensemble methods combine: <span class="shap-value">sarima_pred</span>, <span class="shap-value">lstm_pred</span>, and <span class="shap-value">hybrid_pred</span>.
-      <br><br>
       <strong>How to read:</strong> SHAP values to the <strong>right</strong> push the ensemble prediction higher, to the <strong>left</strong> push it lower.
       A <strong>wider spread</strong> means that base model has <strong>more influence</strong>. Color shows the feature value (red = high, blue = low).
     </p>
@@ -986,7 +1137,7 @@
 
   <!-- Global SHAP plots -->
   <section class="card" style="text-align:center;">
-    <h2 style="font-weight: bold; font-size: 1.5em;">Global SHAP Across Ensemble Methods</h2>
+    <h2 style="font-weight: bold; font-size: 1.5em;">Global Feature Importance</h2>
     <p class="muted">Click any image to zoom.</p>
 
     <div class="grid" style="margin-top: 20px;">
@@ -1004,7 +1155,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../assets/images/models/ensemble/01_shap_ens_mean.png"
+               src="../saved_model_outputs/ensemble_outputs/01_shap_ens_mean.png"
                alt="SHAP (Global): ens_mean (features = base predictions)"
                data-modal="true"
                data-caption="SHAP (Global): ens_mean (features = base predictions)." />
@@ -1024,7 +1175,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../assets/images/models/ensemble/02_shap_ens_median.png"
+               src="../saved_model_outputs/ensemble_outputs/05_shap_ens_median.png"
                alt="SHAP (Global): ens_median (KernelExplainer, sampled)"
                data-modal="true"
                data-caption="SHAP (Global): ens_median (KernelExplainer, sampled)." />
@@ -1044,7 +1195,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../assets/images/models/ensemble/04_shap_ens_stack_ridge.png"
+               src="../saved_model_outputs/ensemble_outputs/02_shap_ens_stack_ridge.png"
                alt="SHAP (Global): ens_stack_ridge (features standardized)"
                data-modal="true"
                data-caption="SHAP (Global): ens_stack_ridge (features standardized)." />
@@ -1064,7 +1215,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../assets/images/models/ensemble/03_shap_ens_weighted_ridge.png"
+               src="../saved_model_outputs/ensemble_outputs/03_shap_ens_weighted_ridge.png"
                alt="SHAP (Global): ens_weighted_ridge (features = base predictions)"
                data-modal="true"
                data-caption="SHAP (Global): ens_weighted_ridge (features = base predictions)." />
@@ -1084,7 +1235,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../assets/images/models/ensemble/05_shap_ens_nnls.png"
+               src="../saved_model_outputs/ensemble_outputs/02_shap_ens_nnls.png"
                alt="SHAP (Global): ens_nnls (features = base predictions)"
                data-modal="true"
                data-caption="SHAP (Global): ens_nnls (features = base predictions)." />
@@ -1143,7 +1294,7 @@
         </div>
         <div class="cardplot-body">
           <img class="plot-img"
-               src="../assets/images/models/ensemble/06_shap_residual_corrector.png"
+               src="../saved_model_outputs/ensemble_outputs/06_residual_corrector.png"
                alt="SHAP (Global): Residual Corrector g(.) (features standardized)"
                data-modal="true"
                data-caption="SHAP (Global): Residual Corrector g(.) (features standardized)." />
@@ -1281,6 +1432,42 @@
         section.classList.remove('active');
       });
       document.getElementById(model + '-section').classList.add('active');
+      
+      // Hide "Why Explainability Matters" card for Hybrid and Ensemble
+      const whyCard = document.getElementById('whyExplainabilityCard');
+      if (whyCard) {
+        if (model === 'hybrid' || model === 'ensemble') {
+          whyCard.style.display = 'none';
+        } else {
+          whyCard.style.display = 'block';
+        }
+      }
+      
+      // Update hero section text for Hybrid and Ensemble
+      const heroTitle = document.getElementById('heroTitle');
+      const heroSubtitle = document.getElementById('heroSubtitle');
+      const heroDescription = document.getElementById('heroDescription');
+      
+      if (model === 'hybrid') {
+        if (heroTitle) heroTitle.textContent = 'Hybrid Model Explainability (SHAP)';
+        if (heroSubtitle) heroSubtitle.textContent = '';
+        if (heroDescription) {
+          heroDescription.innerHTML = 'These SHAP plots explain <strong>how the Hybrid model combines SARIMA baseline predictions with LSTM residual corrections</strong>.<br>The Hybrid model uses <span class="shap-value">sarima_pred</span> as the baseline and <span class="shap-value">residual_pred</span> for corrections.';
+        }
+      } else if (model === 'ensemble') {
+        if (heroTitle) heroTitle.textContent = 'Ensemble Explainability (SHAP)';
+        if (heroSubtitle) heroSubtitle.textContent = '';
+        if (heroDescription) {
+          heroDescription.innerHTML = 'These SHAP plots explain <strong>which base model prediction drives the ensemble</strong>.<br>All ensemble methods combine: <span class="shap-value">sarima_pred</span>, <span class="shap-value">lstm_pred</span>, and <span class="shap-value">hybrid_pred</span>.';
+        }
+      } else {
+        // Reset to default for LSTM
+        if (heroTitle) heroTitle.textContent = 'Model Explainability';
+        if (heroSubtitle) heroSubtitle.textContent = 'Explainable AI (XAI) using SHAP Values';
+        if (heroDescription) {
+          heroDescription.innerHTML = 'Understanding how models make predictions through SHAP (SHapley Additive exPlanations) analysis.<br>Explore global feature importance, local explanations, and scenario-based insights for each model.';
+        }
+      }
     });
   });
 

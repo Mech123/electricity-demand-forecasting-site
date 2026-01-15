@@ -281,7 +281,7 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
-    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
+    <img src="../saved_model_outputs/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
   <div class="topbar-center">EurGrid</div>
 </header>
@@ -293,7 +293,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../Short Term Electricity Demand Forecasting.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="problem.html"><i class="bi bi-bullseye"></i> Understanding the Problem</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link active" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -390,7 +390,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/preprocessing/output2.png"
+                 src="../saved_model_outputs/preprocessing_outputs/output2.png"
                  alt="Initial inspection overview"
                  data-modal="true"
                  data-caption="Comprehensive initial inspection: demand series, distribution, and periodic patterns."/>
@@ -413,7 +413,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/preprocessing/output1.png"
+                 src="../saved_model_outputs/preprocessing_outputs/output1.png"
                  alt="Temporal coverage analysis"
                  data-modal="true"
                  data-caption="Temporal coverage and availability timeline (from preprocessing output)."/>
@@ -435,7 +435,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/preprocessing/output3.png"
+                 src="../saved_model_outputs/preprocessing_outputs/output3.png"
                  alt="Missingness analysis"
                  data-modal="true"
                  data-caption="Comprehensive missing data analysis across features and time."/>
@@ -455,7 +455,7 @@
        </div>
       <div class="cardplot-body" style="padding-bottom: 12px;">
       <img class="plot-img"
-          src="../assets/images/preprocessing/output5.png"
+          src="../saved_model_outputs/preprocessing_outputs/output5.png"
           alt="Feature correlation heatmap"
           data-modal="true"
           data-caption="Feature correlation analysis: identifies redundant and strongly related features."/>
@@ -476,12 +476,123 @@
         </div>
         <div class="cardplot-body">
         <img class="plot-img"
-            src="../assets/images/preprocessing/output4.png"
+            src="../saved_model_outputs/preprocessing_outputs/output4.png"
             alt="Missing values by feature"
             data-modal="true"
             data-caption="Missing value analysis by feature: top columns ranked by missingness."/>
         </div>
         </div>
+
+        <!-- Comprehensive Outlier Detection Analysis -->
+        <div class="cardplot"
+             data-group="overview"
+             data-title="Comprehensive Outlier Detection Analysis"
+             data-cap="Four-panel analysis: box plots of top 5 features with outliers, outlier count by feature, time series with outliers, and outlier percentage by feature."
+             data-insight="Alex identifies features with high outlier counts (e.g., DE_transnetbw_wind_onshore_gen with ~750 outliers) and validates that outliers are temporally distributed rather than systematic errors."
+             data-why="Understanding outlier patterns helps distinguish between data quality issues (systematic) and genuine extreme events (temporal clusters), guiding appropriate treatment strategies.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Outlier Detection Analysis</div>
+              <div class="cardplot-sub">Box plots, counts, time series, and percentage analysis</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/preprocessing_outputs/output6.png"
+                 alt="Comprehensive outlier detection analysis"
+                 data-modal="true"
+                 data-caption="Comprehensive outlier detection: identifies features with high outlier counts and temporal patterns."/>
+          </div>
+        </div>
+
+        <!-- Class Distribution and Class Weights -->
+        <div class="cardplot"
+             data-group="overview"
+             data-title="Class Distribution & Weights for Cost-Sensitive Learning"
+             data-cap="Class imbalance visualization and calculated class weights for balanced model training."
+             data-insight="Alex confirms slight class imbalance (Class 0: 13,257 vs Class 1: 12,893) and applies inverse frequency weighting to ensure balanced learning."
+             data-why="Class imbalance can bias model predictions toward the majority class; weighted learning ensures both classes contribute equally to model training.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Class Distribution & Weights</div>
+              <div class="cardplot-sub">Imbalance analysis and cost-sensitive learning weights</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/preprocessing_outputs/class_weights_visualization_60min.png"
+                 alt="Class distribution and weights"
+                 data-modal="true"
+                 data-caption="Class distribution and weights: addresses class imbalance through cost-sensitive learning."/>
+          </div>
+        </div>
+
+        <!-- Load Time Series: Before vs After Gap Filling -->
+        <div class="cardplot"
+             data-group="missing"
+             data-title="Load Time Series: Before vs After Gap Filling"
+             data-cap="Three-panel comparison: time series overlap, missing values pattern, and load distribution before and after gap filling."
+             data-insight="Alex verifies that gap filling preserves the original signal structure and distribution, with no visible distortion in the time series patterns."
+             data-why="Gap filling must maintain temporal continuity and statistical properties; any distortion would introduce artifacts that models would learn as spurious patterns.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Gap Filling Impact Analysis</div>
+              <div class="cardplot-sub">Time series, missing pattern, and distribution comparison</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/preprocessing_outputs/output7.png"
+                 alt="Before vs after gap filling"
+                 data-modal="true"
+                 data-caption="Gap filling impact: validates that imputation preserves signal structure and distribution."/>
+          </div>
+        </div>
+
+        <!-- Missing Value Imputation Summary -->
+        <div class="cardplot"
+             data-group="missing"
+             data-title="Missing Value Imputation Summary"
+             data-cap="Four-panel dashboard: imputation status, data completeness by feature category, sample time series after imputation, and overall completeness pie chart."
+             data-insight="Alex confirms 100% data completeness across all feature categories (Load, Generation, Price) after imputation, with continuous time series and no remaining gaps."
+             data-why="Complete data coverage is essential for time series models; any remaining gaps would require special handling and could degrade forecast quality.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Imputation Summary Dashboard</div>
+              <div class="cardplot-sub">Status, completeness by category, time series, and overall summary</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/preprocessing_outputs/output8.png"
+                 alt="Missing value imputation summary"
+                 data-modal="true"
+                 data-caption="Missing value imputation summary: confirms 100% data completeness across all categories."/>
+          </div>
+        </div>
+
+        <!-- Outlier Treatment: Before vs After Comparison -->
+        <div class="cardplot"
+             data-group="overview"
+             data-title="Outlier Treatment: Before vs After Comparison"
+             data-cap="Five histograms comparing distributions before and after outlier treatment for key features (load and generation variables)."
+             data-insight="Alex verifies that outlier treatment preserves the underlying distribution characteristics (identical standard deviations), indicating that treatment was conservative and did not distort the data."
+             data-why="Outlier treatment should remove extreme anomalies without altering the core distribution; identical statistics confirm that treatment maintained data integrity.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Outlier Treatment Impact</div>
+              <div class="cardplot-sub">Distribution comparison across five key features</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/preprocessing_outputs/output9.png"
+                 alt="Outlier treatment comparison"
+                 data-modal="true"
+                 data-caption="Outlier treatment impact: validates that treatment preserves distribution characteristics."/>
+          </div>
+        </div>
+
         <!-- Optional: Narrative card (no plot) -->
         <div class="cardplot"
              data-group="overview"
@@ -501,9 +612,11 @@
               <li>No timestamp gaps in selected interval</li>
               <li>Missingness characterized before imputation</li>
               <li>Signal sanity-checked (distribution + cycles)</li>
+              <li>Outliers identified and treated conservatively</li>
+              <li>100% data completeness achieved</li>
             </ul>
           </div>
-          <div class="hero-actions" style="justify-content:center;">
+          <div class="hero-actions" style="justify-content:center; margin-bottom: 24px;">
             <a class="btn" href="dataset.html"><i class="bi bi-arrow-left"></i> Dataset Overview</a>
             <a class="btn primary" href="eda.html"><i class="bi bi-arrow-right"></i> Exploratory Data Analysis</a>
           </div>

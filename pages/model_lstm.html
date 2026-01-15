@@ -334,7 +334,7 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
-    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
+    <img src="../saved_model_outputs/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
   <div class="topbar-center">EurGrid</div>
 </header>
@@ -386,10 +386,10 @@
     </div>
 
     <div class="pill-row">
-      <a class="pill" href="../assets/outputs/lstm/metrics.json" target="_blank" rel="noopener">
+      <a class="pill" href="../saved_model_outputs/lstm_outputs/metrics.json" target="_blank" rel="noopener">
         <i class="bi bi-braces"></i> Metrics JSON
       </a>
-      <a class="pill" href="../assets/outputs/lstm/lstm_predictions.csv" target="_blank" rel="noopener">
+      <a class="pill" href="../saved_model_outputs/lstm_outputs/lstm_predictions.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Predictions CSV
       </a>
       <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/lstm_model.ipynb" target="_blank" rel="noopener">
@@ -473,7 +473,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/lstm/training_history.png"
+                 src="../saved_model_outputs/lstm_outputs/training_history.png"
                  alt="Training history"
                  data-modal="true"
                  data-caption="LSTM training history showing loss and validation metrics convergence during model training."/>
@@ -493,7 +493,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/lstm/predictions_visualization.png"
+                 src="../saved_model_outputs/lstm_outputs/predictions_visualization.png"
                  alt="Predictions visualization"
                  data-modal="true"
                  data-caption="LSTM predictions compared to actual demand showing full test period visualization."/>
@@ -610,7 +610,7 @@
     const kpis = document.getElementById("csvKpis");
 
     try{
-      const res = await fetch("../assets/outputs/lstm/lstm_predictions.csv", { cache: "no-store" });
+      const res = await fetch("../saved_model_outputs/lstm_outputs/lstm_predictions.csv", { cache: "no-store" });
       if (!res.ok) throw new Error("csv not found");
       const text = await res.text();
 
@@ -660,7 +660,7 @@
 
       // Load model config from JSON
       try {
-        const jsonRes = await fetch("../assets/outputs/lstm/metrics.json", { cache: "no-store" });
+        const jsonRes = await fetch("../saved_model_outputs/lstm_outputs/metrics.json", { cache: "no-store" });
         if (jsonRes.ok) {
           const jsonData = await jsonRes.json();
           if (jsonData.train_period) {
@@ -668,8 +668,8 @@
             if (trainEl) {
               const period = jsonData.train_period.split(" to ");
               if (period.length === 2) {
-                const start = new Date(period[0]).getFullYear();
-                const end = new Date(period[1]).getFullYear();
+                const start = period[0].trim().slice(0, 4);
+                const end = period[1].trim().slice(0, 4);
                 trainEl.textContent = `${start}-${end}`;
               }
             }
@@ -679,7 +679,7 @@
             if (testEl) {
               const period = jsonData.test_period.split(" to ");
               if (period.length > 0) {
-                const year = new Date(period[0]).getFullYear();
+                const year = period[0].trim().slice(0, 4);
                 testEl.textContent = String(year);
               }
             }

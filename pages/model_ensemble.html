@@ -307,7 +307,7 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
-    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
+    <img src="../saved_model_outputs/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
   <div class="topbar-center">EurGrid</div>
 </header>
@@ -342,13 +342,13 @@
 
   <!-- HERO -->
   <section class="card" style="text-align:center; position: relative;">
-    <img src="../assets/images/models/ensemble/ensemble.png" alt="Ensemble Model" style="position: absolute; right: 20px; top: 18px; width: 300px; height: 260px; max-height: 1050px; border-radius: 8px; object-fit: contain; z-index: 1;">
+    <img src="../saved_model_outputs/ensemble_outputs/ensemble.png" alt="Ensemble Model" style="position: absolute; right: 20px; top: 18px; width: 300px; height: 260px; max-height: 1050px; border-radius: 8px; object-fit: contain; z-index: 1;">
     <h1 style="font-weight: bold; font-size: 2.2em; text-align: center;">Ensemble Model</h1>
     <p class="muted" style="font-size: 0.9em; text-align: center;">
       SARIMA + LSTM + Hybrid
     </p>
-    <p class="muted" style="font-size: 0.85em; text-align: center; margin-top: 8px;">
-      Combines SARIMA, LSTM, and Hybrid using blending/meta-learners (mean/median, Ridge/weighted Ridge stacking, NNLS) with a peak-aware switch that applies residual correction mainly during peak periods (≥ p90).<br>
+    <p class="muted" style="font-size: 0.85em; text-align: center; margin-top: 8px; padding-right: 340px; padding-bottom: 20px; min-height: 100px;">
+      Combines SARIMA, LSTM, and Hybrid using blending/meta-learners (mean/median, Ridge/weighted Ridge stacking, NNLS) with a peak-aware switch that applies residual correction mainly during peak periods (≥ p90).<br><br>
       Final prediction use the residual-corrected forecast during peak hours, otherwise use the normal LSTM forecast.
     </p>
 
@@ -360,7 +360,7 @@
     </div>
 
     <div class="pill-row">
-      <a class="pill" href="../assets/outputs/ensemble/final_switch_residual_predictions.csv" target="_blank" rel="noopener">
+      <a class="pill" href="../saved_model_outputs/ensemble_outputs/final_switch_residual_predictions.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Predictions CSV
       </a>
       <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/ensemble/ensemble_outputs/ensemble.ipynb" target="_blank" rel="noopener">
@@ -401,7 +401,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/ensemble/01_actual_vs_predictions_full.png"
+                 src="../saved_model_outputs/ensemble_outputs/01_actual_vs_predictions_full.png"
                  alt="Eval: Actual vs Key Models"
                  data-modal="true"
                  data-caption="Evaluation set: actual demand compared to key model predictions (actual, LSTM, final_switch_residual, ens_residual_lstm, ens_nnls)."/>
@@ -421,7 +421,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/ensemble/02_eval_absolute_error_cdf.png"
+                 src="../saved_model_outputs/ensemble_outputs/02_eval_absolute_error_cdf.png"
                  alt="Eval Absolute Error CDF"
                  data-modal="true"
                  data-caption="CDF of absolute error on the evaluation set for key models (lower curve = better overall error distribution)."/>
@@ -441,7 +441,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/ensemble/03_peak_detection_pr_curve.png"
+                 src="../saved_model_outputs/ensemble_outputs/03_peak_detection_pr_curve.png"
                  alt="Peak Detection PR Curve (Eval)"
                  data-modal="true"
                  data-caption="Peak Detection Precision-Recall Curve on eval set (peak = actual ≥ p90(eval)) comparing models."/>
@@ -461,7 +461,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/ensemble/04_tuned_final_switch_vs_lstm_full.png"
+                 src="../saved_model_outputs/ensemble_outputs/04_tuned_final_switch_vs_lstm_full.png"
                  alt="Tuned final-switch vs LSTM"
                  data-modal="true"
                  data-caption="Evaluation: tuned final-switch vs LSTM, with triggered (peak) points highlighted."/>
@@ -481,20 +481,41 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/ensemble/05_Overall_vs_Peak__comparision.png"
+                 src="../saved_model_outputs/ensemble_outputs/05_Overall_vs_Peak__comparision.png"
                  alt="Overall vs Peak MAE Comparison"
                  data-modal="true"
                  data-caption="Bar charts comparing overall MAE and peak-only MAE (actual ≥ p90(eval)) across all tried models."/>
           </div>
         </div>
 
+        <!-- Overall vs Peak comparison -->
+        <div class="cardplot"
+             data-group="comparison"
+             data-title="Overall vs Peak MAE Comparison"
+             data-cap="Overall MAE and Peak-only MAE comparison across all tried models.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Triggered Peaks: Error Improvement</div>
+              <div class="cardplot-sub">Peak error improvement between LSTM and tuned final-switch</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../saved_model_outputs/ensemble_outputs/06_triggered_peaks_error_improvement.png"
+                 alt="Overall vs Peak MAE Comparison"
+                 data-modal="true"
+                 data-caption="Bar charts comparing overall MAE and peak-only MAE (actual ≥ p90(eval)) across all tried models."/>
+          </div>
+        </div>
+
+
       </div>
 
       <div class="grid-2" style="margin-top: 20px;">
         <div class="panel">
           <h3 style="margin:0 0 6px; font-weight: bold;">Model Summary</h3>
-          <p class="muted" style="margin:0; font-size: 0.9em; text-align: left;">
-            The ensemble implementation achieves a highly specialized forecasting system by utilizing a Switch-Residual strategy that prioritizes accuracy during critical high-demand periods. Instead of relying on a single average prediction, the system employs a smart detection gate that monitors the baseline model; when a potential demand spike is identified, it automatically switches to a dedicated residual corrector that fine-tunes the forecast using auxiliary data sources. This targeted approach allows the ensemble to maintain smooth performance during normal operations while significantly reducing the risk of large errors during extreme peaks. Ultimately, the ensemble proves to be a robust and intelligent solution, effectively bridging the gap between steady-state reliability and the high-precision requirements of volatile demand conditions.
+          <p class="muted" style="margin:0; font-size: 0.9em; text-align: center;">
+            The ensemble forecasting system uses a Switch-Residual strategy to maintain high accuracy, particularly during critical high-demand periods. It continuously monitors a baseline model and automatically activates a residual corrector when a potential demand spike is detected, refining forecasts using real-time data. This approach ensures stable performance under normal conditions while significantly reducing errors during extreme demand fluctuations.
           </p>
         </div>
         <div class="panel">
@@ -603,7 +624,7 @@
     const kpis = document.getElementById("csvKpis");
 
     try{
-      const res = await fetch("../assets/outputs/ensemble/final_switch_residual_predictions.csv", { cache: "no-store" });
+      const res = await fetch("../saved_model_outputs/ensemble_outputs/ensemble_comparison_table.csv", { cache: "no-store" });
       if (!res.ok) throw new Error("csv not found");
       const text = await res.text();
 
@@ -631,7 +652,7 @@
       const dataRows = rows.slice(1).filter(r => r.some(v => String(v).trim() !== ""));
       const findByModel = (m) => dataRows.find(r => String(r[idx("Model")] ?? "").trim() === m);
 
-      dataRow = findByModel("final_switch_residual") || findByModel("ensemble") || dataRows[0];
+      dataRow = findByModel("ens_residual_lstm") || findByModel("ensemble") || dataRows[0];
       if (!dataRow) throw new Error("No data rows");
 
       const getVal = (col) => {

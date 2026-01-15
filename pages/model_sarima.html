@@ -334,7 +334,7 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
-    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
+    <img src="../saved_model_outputs/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
   <div class="topbar-center">EurGrid</div>
 </header>
@@ -386,10 +386,10 @@
     </div>
 
     <div class="pill-row">
-      <a class="pill" href="../assets/outputs/sarima/sarima_metrics.json" target="_blank" rel="noopener">
+      <a class="pill" href="../saved_model_outputs/sarima_outputs/sarima_metrics.json" target="_blank" rel="noopener">
         <i class="bi bi-braces"></i> Metrics JSON
       </a>
-      <a class="pill" href="../assets/outputs/sarima/sarima_forecasts.csv" target="_blank" rel="noopener">
+      <a class="pill" href="../saved_model_outputs/sarima_outputs/sarima_forecasts.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Predictions CSV
       </a>
       <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/sarima_model.ipynb" target="_blank" rel="noopener">
@@ -472,7 +472,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/sarima/01_time_series_overview.png"
+                 src="../saved_model_outputs/sarima_outputs/01_time_series_overview.png"
                  alt="Train test split"
                  data-modal="true"
                  data-caption="Time series overview showing full series with train (2015-2017) and test (2018) period split for SARIMA model evaluation."/>
@@ -492,7 +492,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/sarima/05_seasonal_patterns.png"
+                 src="../saved_model_outputs/sarima_outputs/05_seasonal_patterns.png"
                  alt="Seasonal patterns"
                  data-modal="true"
                  data-caption="Seasonal patterns analysis showing daily and weekly seasonality behavior in electricity demand."/>
@@ -512,7 +512,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/sarima/10_forecasts.png"
+                 src="../saved_model_outputs/sarima_outputs/10_forecasts.png"
                  alt="Forecasts visualization"
                  data-modal="true"
                  data-caption="SARIMA forecasts compared to actual demand showing full test period and zoomed view for detailed analysis."/>
@@ -532,7 +532,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/sarima/11_forecast_scatter.png"
+                 src="../saved_model_outputs/sarima_outputs/11_forecast_scatter.png"
                  alt="Forecast scatter"
                  data-modal="true"
                  data-caption="Scatter plot of actual vs predicted values showing the correlation and prediction accuracy of the SARIMA model."/>
@@ -552,7 +552,7 @@
           </div>
           <div class="cardplot-body">
             <img class="plot-img"
-                 src="../assets/images/models/sarima/12_error_analysis.png"
+                 src="../saved_model_outputs/sarima_outputs/12_error_analysis.png"
                  alt="Error analysis"
                  data-modal="true"
                  data-caption="Error analysis showing error distribution and peak-specific error patterns for the SARIMA model."/>
@@ -671,17 +671,40 @@
     const tbl = document.getElementById("csvTable");
     const kpis = document.getElementById("csvKpis");
 
+    // Check if required elements exist
+    if (!state) {
+      console.error("csvState element not found");
+      return;
+    }
+    if (!kpis) {
+      console.error("csvKpis element not found");
+      if (state) {
+        state.textContent = "Error: Required elements not found for CSV metrics loading";
+        state.style.display = "block";
+      }
+      return;
+    }
+
     try{
-      const res = await fetch("../assets/outputs/sarima/sarima_forecasts.csv", { cache: "no-store" });
-      if (!res.ok) throw new Error("csv not found");
+      console.log("Attempting to load SARIMA CSV...");
+      const res = await fetch("../saved_model_outputs/sarima_outputs/sarima_forecasts.csv", { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error(`CSV file not found or error loading (status: ${res.status})`);
+      }
       const text = await res.text();
+      console.log("CSV loaded, length:", text.length, "characters");
 
       const lines = text.trim().split(/\r?\n/);
-      if (lines.length < 2) throw new Error("CSV has no data rows");
+      console.log("CSV lines:", lines.length);
+      if (lines.length < 2) throw new Error("CSV has no data rows (only header or empty)");
       
       const header = lines[0].split(",").map(s => s.trim());
+      console.log("CSV Header:", header); // Debug log
       const idxActual = header.indexOf("actual");
       const idxPred   = header.indexOf("forecast");
+      
+      if (idxActual === -1) throw new Error("CSV missing 'actual' column. Found columns: " + header.join(", "));
+      if (idxPred === -1) throw new Error("CSV missing 'forecast' column. Found columns: " + header.join(", "));
 
       if (idxActual < 0 || idxPred < 0) throw new Error("Missing actual/forecast columns");
 
@@ -697,7 +720,8 @@
         yAll.push(a); yhatAll.push(p);
       }
       
-      if (yAll.length === 0) throw new Error("No valid data rows found in CSV");
+      console.log("Valid data rows found:", yAll.length);
+      if (yAll.length === 0) throw new Error("No valid data rows found in CSV (all rows had null/missing values)");
 
       // Calculate p90 threshold for peak
       const p90 = percentile(yAll, 90);
@@ -724,10 +748,15 @@
         "Rows used (peak)": yPeak.length
       };
 
-      document.getElementById("kpiMaeAll").textContent  = fmt(out["Overall MAE"]);
-      document.getElementById("kpiRmseAll").textContent = fmt(out["Overall RMSE"]);
-      document.getElementById("kpiMaePeak").textContent = fmt(out["Peak MAE"]);
-      document.getElementById("kpiRmsePeak").textContent= fmt(out["Peak RMSE"]);
+      const kpiMaeAllEl = document.getElementById("kpiMaeAll");
+      const kpiRmseAllEl = document.getElementById("kpiRmseAll");
+      const kpiMaePeakEl = document.getElementById("kpiMaePeak");
+      const kpiRmsePeakEl = document.getElementById("kpiRmsePeak");
+      
+      if (kpiMaeAllEl) kpiMaeAllEl.textContent = fmt(out["Overall MAE"]);
+      if (kpiRmseAllEl) kpiRmseAllEl.textContent = fmt(out["Overall RMSE"]);
+      if (kpiMaePeakEl) kpiMaePeakEl.textContent = fmt(out["Peak MAE"]);
+      if (kpiRmsePeakEl) kpiRmsePeakEl.textContent = fmt(out["Peak RMSE"]);
 
       // Display Directional Accuracy in summary card
       const dirAcc = out["Directional Accuracy"];
@@ -740,7 +769,7 @@
 
       // Load model config from JSON
       try {
-        const jsonRes = await fetch("../assets/outputs/sarima/sarima_metrics.json", { cache: "no-store" });
+        const jsonRes = await fetch("../saved_model_outputs/sarima_outputs/sarima_metrics.json", { cache: "no-store" });
         if (jsonRes.ok) {
           const jsonData = await jsonRes.json();
           if (jsonData.model_order && jsonData.model_seasonal_order) {
@@ -752,8 +781,8 @@
             if (trainEl) {
               const period = jsonData.train_period.split(" to ");
               if (period.length === 2) {
-                const start = new Date(period[0]).getFullYear();
-                const end = new Date(period[1]).getFullYear();
+                const start = period[0].trim().slice(0, 4);
+                const end = period[1].trim().slice(0, 4);
                 trainEl.textContent = `${start}-${end}`;
               }
             }
@@ -763,7 +792,7 @@
             if (testEl) {
               const period = jsonData.test_period.split(" to ");
               if (period.length > 0) {
-                const year = new Date(period[0]).getFullYear();
+                const year = period[0].trim().slice(0, 4);
                 testEl.textContent = String(year);
               }
             }
@@ -782,14 +811,16 @@
         "Overall R²"
       ];
       const overallBody = document.getElementById("csvBodyOverall");
-      overallBody.innerHTML = overallOrder.map((k) => {
-        const v = out[k];
-        const show = (typeof v === "number") ? (Number.isInteger(v) ? String(v) : fmt(v)) : "N/A";
-        const metricName = k.replace("Overall ", "");
-        const isBold = metricName.includes("MAE") || metricName.includes("RMSE") || metricName.includes("R²");
-        const valueCell = isBold ? `<td style="font-weight: bold;">${show}</td>` : `<td>${show}</td>`;
-        return `<tr><td>${metricName}</td>${valueCell}</tr>`;
-      }).join("");
+      if (overallBody) {
+        overallBody.innerHTML = overallOrder.map((k) => {
+          const v = out[k];
+          const show = (typeof v === "number") ? (Number.isInteger(v) ? String(v) : fmt(v)) : "N/A";
+          const metricName = k.replace("Overall ", "");
+          const isBold = metricName.includes("MAE") || metricName.includes("RMSE") || metricName.includes("R²");
+          const valueCell = isBold ? `<td style="font-weight: bold;">${show}</td>` : `<td>${show}</td>`;
+          return `<tr><td>${metricName}</td>${valueCell}</tr>`;
+        }).join("");
+      }
 
       // Peak metrics
       const peakOrder = [
@@ -800,23 +831,30 @@
         "Peak R²"
       ];
       const peakBody = document.getElementById("csvBodyPeak");
-      peakBody.innerHTML = peakOrder.map((k) => {
-        const v = out[k];
-        const show = (typeof v === "number") ? (Number.isInteger(v) ? String(v) : fmt(v)) : "N/A";
-        const metricName = k.replace("Peak ", "");
-        const isBold = metricName.includes("MAE") || metricName.includes("RMSE") || metricName.includes("R²");
-        const valueCell = isBold ? `<td style="font-weight: bold;">${show}</td>` : `<td>${show}</td>`;
-        return `<tr><td>${metricName}</td>${valueCell}</tr>`;
-      }).join("");
+      if (peakBody) {
+        peakBody.innerHTML = peakOrder.map((k) => {
+          const v = out[k];
+          const show = (typeof v === "number") ? (Number.isInteger(v) ? String(v) : fmt(v)) : "N/A";
+          const metricName = k.replace("Peak ", "");
+          const isBold = metricName.includes("MAE") || metricName.includes("RMSE") || metricName.includes("R²");
+          const valueCell = isBold ? `<td style="font-weight: bold;">${show}</td>` : `<td>${show}</td>`;
+          return `<tr><td>${metricName}</td>${valueCell}</tr>`;
+        }).join("");
+      }
 
-      state.style.display = "none";
-      kpis.style.display = "grid";
-      tbl.style.display = "grid";
+      console.log("Metrics computed successfully, updating UI...");
+      if (state) state.style.display = "none";
+      if (kpis) kpis.style.display = "grid";
+      if (tbl) tbl.style.display = "grid";
       const metricsLoading = document.getElementById("metricsLoading");
       if (metricsLoading) metricsLoading.style.display = "none";
     }catch(e){
       console.error("SARIMA CSV load error:", e);
-      if (state) state.textContent = "Could not compute SARIMA metrics from CSV: " + e.message;
+      if (state) {
+        state.textContent = "Could not compute SARIMA metrics from CSV: " + (e.message || "Unknown error");
+        state.style.display = "block";
+        state.style.color = "#dc2626"; // Red color for error
+      }
     }
   }
 

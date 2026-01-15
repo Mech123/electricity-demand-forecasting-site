@@ -291,6 +291,159 @@
       margin-left: -10px;
       object-fit: contain;
     }
+
+    /* Plot grid - modern cardplot style */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .cardplot{
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow:hidden;
+      cursor:pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+    .cardplot::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 120, 255, 0.02) 0%, rgba(249, 250, 251, 0.5) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .cardplot:hover::before {
+      opacity: 1;
+    }
+    .cardplot:hover{
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 12px 32px rgba(0, 120, 255, 0.25), 0 6px 16px rgba(0, 120, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 120, 255, 0.4);
+    }
+    @media (max-width: 1200px){
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .cardplot-head{
+      padding: 16px 18px;
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #f3f4f6;
+      background: linear-gradient(135deg, rgba(0, 120, 255, 0.04) 0%, rgba(249, 250, 251, 0.8) 100%);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+      text-align: left;
+    }
+    .cardplot:hover .cardplot-head{
+      background: linear-gradient(135deg, rgba(0, 120, 255, 0.08) 0%, rgba(239, 246, 255, 0.9) 100%);
+      border-bottom-color: rgba(0, 120, 255, 0.15);
+    }
+    .cardplot-title{ 
+      font-weight: 600; 
+      margin:0; 
+      font-size: 20px;
+      color: #111827;
+      letter-spacing: -0.01em;
+      transition: color 0.3s ease;
+      text-align: left;
+    }
+    .cardplot:hover .cardplot-title {
+      color: #0078ff;
+    }
+    .cardplot-sub{ 
+      color: #9ca3af; 
+      margin-top: 6px; 
+      line-height: 1.5; 
+      font-size: 14px;
+    }
+
+    .cardplot-body{ 
+      padding: 12px 14px 14px; 
+      position: relative;
+      z-index: 2;
+    }
+    .plot-img{
+      width: 100%;
+      height: auto;
+      display:block;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #fff;
+      transition: transform 0.3s ease;
+    }
+    .cardplot:hover .plot-img {
+      transform: scale(1.02);
+    }
+
+    /* Modal */
+    .modal-overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.72);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:9999;
+    }
+    .modal-overlay.open{ display:flex; }
+    .modal{
+      width:min(1100px, 96vw);
+      max-height: 92vh;
+      overflow:hidden;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(20,24,32,0.96);
+      display:flex;
+      flex-direction:column;
+    }
+    .modal-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.10);
+    }
+    .modal-title{ opacity:0.95; font-weight: 700; color: #fff; }
+    .modal-actions{ display:flex; gap:8px; align-items:center; }
+    .icon-round{
+      width:38px; height:38px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      cursor:pointer;
+      color: #fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition: background 0.2s ease;
+    }
+    .icon-round:hover{ background: rgba(255,255,255,0.08); }
+    .modal-body{ overflow:auto; padding:14px; }
+    .modal-body img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .modal-cap{ margin-top:10px; opacity:0.9; color: #9ca3af; }
   </style>
 </head>
 
@@ -298,7 +451,7 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
-    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
+    <img src="../saved_model_outputs/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
   <div class="topbar-center">EurGrid</div>
 </header>
@@ -310,7 +463,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../Short Term Electricity Demand Forecasting.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="problem.html"><i class="bi bi-bullseye"></i> Understanding the Problem</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -348,7 +501,7 @@
       </div>
 
       <div class="cardlet acceptance-criteria" style="position: relative;">
-        <img src="../assets/images/alex_preprocess.png" alt="Alex" style="position: absolute; left: -300px; top: -10%; width: 200px; height: auto; max-height: 600px; border-radius: 8px; object-fit: contain; z-index: 1;">
+        <img src="../saved_model_outputs/alex_preprocess.png" alt="Alex" style="position: absolute; left: -300px; top: -10%; width: 200px; height: auto; max-height: 600px; border-radius: 8px; object-fit: contain; z-index: 1;">
         <div class="status"><i class="bi bi-shield-check"></i> Alex's acceptance criteria</div>
         <ul style="margin-top:10px; text-align: left;">
           <li>Features must represent real operational patterns</li>
@@ -385,7 +538,76 @@
   </section>
 
   <section class="card">
-    <h2>Feature Groups (How Alex builds “signals”)</h2>
+    <h2>Feature Engineering Visualizations</h2>
+    <p class="muted">Click an image to zoom. Navigate between images using arrow buttons or keyboard.</p>
+
+    <div class="grid" style="margin-top: 20px;">
+
+      <!-- Feature Normalization -->
+      <div class="cardplot"
+           data-group="normalization"
+           data-title="Feature Normalization: Normalized Feature Distributions"
+           data-cap="Six histograms showing normalized feature distributions for load and generation features after RobustScaler transformation.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Feature Normalization</div>
+            <div class="cardplot-sub">Normalized feature distributions (6 key features)</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/preprocessing_outputs/outputf10.png"
+               alt="Feature normalization"
+               data-modal="true"
+               data-caption="Feature Normalization: Normalized Feature Distributions showing bimodal patterns for load features and right-skewed distributions for solar generation features."/>
+        </div>
+      </div>
+
+      <!-- Calendar Feature Patterns -->
+      <div class="cardplot"
+           data-group="calendar"
+           data-title="Calendar Feature Patterns"
+           data-cap="Six plots showing average load patterns by hour, day of week, month, quarter, heatmap (day vs hour), and year trends.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Calendar Feature Patterns</div>
+            <div class="cardplot-sub">Average load by hour, day, month, quarter, and year</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/preprocessing_outputs/outputf11.png"
+               alt="Calendar feature patterns"
+               data-modal="true"
+               data-caption="Calendar Feature Patterns: comprehensive visualization of temporal patterns including daily cycles, weekly patterns, seasonal variations, and year-over-year trends."/>
+        </div>
+      </div>
+
+      <!-- Final Preprocessed Dataset Summary -->
+      <div class="cardplot"
+           data-group="summary"
+           data-title="Final Preprocessed Dataset Summary"
+           data-cap="Four-panel dashboard: dataset overview (rows/columns/features), feature types distribution, data quality metrics, and target load time series.">
+        <div class="cardplot-head">
+          <div>
+            <div class="cardplot-title">Final Dataset Summary</div>
+            <div class="cardplot-sub">Overview, feature types, data quality, and target time series</div>
+          </div>
+        </div>
+        <div class="cardplot-body">
+          <img class="plot-img"
+               src="../saved_model_outputs/preprocessing_outputs/outputf12.png"
+               alt="Final dataset summary"
+               data-modal="true"
+               data-caption="Final Preprocessed Dataset Summary: 32,688 rows, 83 columns, 77 features with 100% data completeness and clear seasonal patterns in target load."/>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Feature Groups (How Alex builds "signals")</h2>
 
     <div class="grid-2">
       <div class="cardlet">
@@ -441,6 +663,95 @@
   </section>
 
 </main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="imgModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Plot viewer">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle">Plot</div>
+      <div class="modal-actions">
+        <button class="icon-round" id="prevBtn" aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+        <button class="icon-round" id="nextBtn" aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+        <button class="icon-round" id="closeBtn" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <img id="modalImg" alt="Expanded plot">
+      <div class="modal-cap" id="modalCap"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Modal setup with navigation
+  const modal = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalCap = document.getElementById('modalCap');
+  const closeBtn = document.getElementById('closeBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  let visibleCards = [];
+  let currentIndex = 0;
+
+  function refreshVisibleCards(){
+    visibleCards = Array.from(document.querySelectorAll('.cardplot'));
+  }
+
+  function openModalByIndex(i){
+    refreshVisibleCards();
+    currentIndex = Math.max(0, Math.min(i, visibleCards.length - 1));
+    const c = visibleCards[currentIndex];
+    const img = c.querySelector('img[data-modal="true"]');
+    if (img) {
+      modalImg.src = img.getAttribute('src');
+      modalTitle.textContent = c.dataset.title || 'Plot';
+      modalCap.textContent = img.getAttribute('data-caption') || c.dataset.cap || '';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    modalImg.src = '';
+  }
+  function nextImg(){ 
+    refreshVisibleCards();
+    if (visibleCards.length > 0) {
+      openModalByIndex((currentIndex + 1) % visibleCards.length); 
+    }
+  }
+  function prevImg(){ 
+    refreshVisibleCards();
+    if (visibleCards.length > 0) {
+      openModalByIndex((currentIndex - 1 + visibleCards.length) % visibleCards.length); 
+    }
+  }
+
+  document.querySelectorAll('.cardplot img[data-modal="true"]').forEach((img, idx) => {
+    img.style.cursor = "zoom-in";
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = img.closest('.cardplot');
+      const cardIndex = Array.from(document.querySelectorAll('.cardplot')).indexOf(card);
+      openModalByIndex(cardIndex);
+    });
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (nextBtn) nextBtn.addEventListener('click', nextImg);
+  if (prevBtn) prevBtn.addEventListener('click', prevImg);
+  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (!modal || !modal.classList.contains('open')) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowRight') nextImg();
+    if (e.key === 'ArrowLeft') prevImg();
+  });
+</script>
 
 <script src="../assets/app.js"></script>
 </body>

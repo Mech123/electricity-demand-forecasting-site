@@ -428,7 +428,7 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
-    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
+    <img src="../saved_model_outputs/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
   <div class="topbar-center">EurGrid</div>
 </header>
@@ -440,7 +440,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../Short Term Electricity Demand Forecasting.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="problem.html"><i class="bi bi-bullseye"></i> Understanding the Problem</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -499,6 +499,7 @@
           <option value="calendar">Calendar</option>
           <option value="weather">Weather</option>
           <option value="lags">Lags</option>
+          <option value="features">Features</option>
         </select>
       </div>
 
@@ -519,6 +520,37 @@
 
       <div class="grid" id="plotGrid">
 
+        <!-- Target Distribution -->
+        <div class="cardplot" data-group="signal"
+             data-title="Target Distribution Analysis"
+             data-cap="Comprehensive statistical overview: distribution, boxplot, normality check, and cumulative distribution."
+             data-insight="Alex confirms the bimodal nature of electricity load and validates non-normal distribution assumptions."
+             data-why="Understanding the target distribution guides model selection (e.g., SARIMA for seasonal patterns, LSTM for non-linear relationships) and feature engineering choices.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Target Distribution</div>
+              <div class="cardplot-sub">Histogram, boxplot, Q-Q plot, and CDF analysis</div>
+            </div>
+            <div class="tag"><i class="bi bi-bar-chart"></i> Insights</div>
+          </div>
+          <img src="../saved_model_outputs/eda_outputs/step2_target_distribution_60min.png" alt="Target distribution">
+        </div>
+
+        <div class="cardplot" data-group="seasonality"
+             data-title="Seasonality Patterns"
+             data-cap="Hour/weekday/month structure and heatmaps."
+             data-insight="Alex verifies the grid's daily and weekly rhythm."
+             data-why="This directly motivates cyclical encodings and seasonal settings for SARIMA.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Seasonality</div>
+              <div class="cardplot-sub">Daily + weekly cycles, plus monthly effects</div>
+            </div>
+            <div class="tag"><i class="bi bi-calendar3"></i> Insights</div>
+          </div>
+          <img src="../saved_model_outputs/eda_outputs/step4_seasonality_60min.png" alt="Seasonality plot">
+        </div>
+
         <!-- Use your existing plot paths (from current eda.html) -->
         <div class="cardplot wide" data-group="signal"
              data-title="Electricity Load — Time Series Overview"
@@ -532,22 +564,7 @@
             </div>
             <div class="tag"><i class="bi bi-activity"></i> Insights</div>
           </div>
-          <img src="../assets/images/eda/step2_timeseries_60min.png" alt="Time series overview">
-        </div>
-
-        <div class="cardplot" data-group="seasonality"
-             data-title="Seasonality Patterns"
-             data-cap="Hour/weekday/month structure and heatmaps."
-             data-insight="Alex verifies the grid’s daily and weekly rhythm."
-             data-why="This directly motivates cyclical encodings and seasonal settings for SARIMA.">
-          <div class="cardplot-head">
-            <div>
-              <div class="cardplot-title">Seasonality</div>
-              <div class="cardplot-sub">Daily + weekly cycles, plus monthly effects</div>
-            </div>
-            <div class="tag"><i class="bi bi-calendar3"></i> Insights</div>
-          </div>
-          <img src="../assets/images/eda/step3_seasonality_60min.png" alt="Seasonality plot">
+          <img src="../saved_model_outputs/eda_outputs/step3_timeseries_60min.png" alt="Time series overview">
         </div>
 
         <div class="cardplot" data-group="seasonality"
@@ -562,7 +579,7 @@
             </div>
             <div class="tag"><i class="bi bi-layers"></i> Insights</div>
           </div>
-          <img src="../assets/images/eda/step3_stl_decomposition_60min.png" alt="STL decomposition">
+          <img src="../saved_model_outputs/eda_outputs/step5_stl_decomposition_60min.png" alt="STL decomposition">
         </div>
 
         <div class="cardplot" data-group="stationarity"
@@ -577,7 +594,7 @@
             </div>
             <div class="tag"><i class="bi bi-graph-up"></i>Insights</div>
           </div>
-          <img src="../assets/images/eda/step4_stationarity_60min.png" alt="Stationarity plot">
+          <img src="../saved_model_outputs/eda_outputs/step6_stationarity_60min.png" alt="Stationarity plot">
         </div>
 
         <div class="cardplot" data-group="lags"
@@ -592,7 +609,7 @@
             </div>
             <div class="tag"><i class="bi bi-link-45deg"></i> Insights</div>
           </div>
-          <img src="../assets/images/eda/step5_autocorrelation_60min.png" alt="ACF PACF">
+          <img src="../saved_model_outputs/eda_outputs/step7_autocorrelation_60min.png" alt="ACF PACF">
         </div>
 
         <div class="cardplot" data-group="calendar"
@@ -607,7 +624,7 @@
             </div>
             <div class="tag"><i class="bi bi-calendar-week"></i> Insights</div>
           </div>
-          <img src="../assets/images/eda/step6_calendar_effects_60min.png" alt="Calendar effects">
+          <img src="../saved_model_outputs/eda_outputs/step8_calendar_effects_60min.png" alt="Calendar effects">
         </div>
 
         <div class="cardplot" data-group="weather"
@@ -622,7 +639,7 @@
             </div>
             <div class="tag"><i class="bi bi-cloud-sun"></i> Insights</div>
           </div>
-          <img src="../assets/images/eda/step7_weather_exploration_60min.png" alt="Weather exploration">
+          <img src="../saved_model_outputs/eda_outputs/step9_weather_exploration_60min.png" alt="Weather exploration">
         </div>
 
         <div class="cardplot" data-group="lags"
@@ -637,7 +654,71 @@
             </div>
             <div class="tag"><i class="bi bi-arrow-repeat"></i> Insights</div>
           </div>
-          <img src="../assets/images/eda/step8_lagged_relationships_60min.png" alt="Lagged relationships">
+          <img src="../saved_model_outputs/eda_outputs/step10_lagged_relationships_60min.png" alt="Lagged relationships">
+        </div>
+
+        <!-- Data Availability Timeline -->
+        <div class="cardplot" data-group="signal"
+             data-title="Data Availability Timeline (After Gap-Filling)"
+             data-cap="Complete data coverage across the entire operational period with no missing values."
+             data-insight="Alex verifies that the dataset is complete and ready for modeling after gap-filling procedures."
+             data-why="Missing data can introduce bias and reduce model reliability. Complete coverage ensures consistent forecasting performance.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Data Availability Timeline</div>
+              <div class="cardplot-sub">Post gap-filling coverage verification</div>
+            </div>
+            <div class="tag"><i class="bi bi-check-circle"></i> Insights</div>
+          </div>
+          <img src="../saved_model_outputs/eda_outputs/step1.1_coverage_timeline_after_60min.png" alt="Data availability timeline">
+        </div>
+
+        <!-- Peak Load Analysis -->
+        <div class="cardplot" data-group="calendar"
+             data-title="Peak Load Analysis"
+             data-cap="Comprehensive peak load investigation: time series with peaks highlighted, hourly patterns, weekday/weekend distribution, and solar proxy relationship."
+             data-insight="Alex identifies that peak loads occur primarily during weekday mornings (8-12 PM) and are inversely related to solar generation."
+             data-why="Peak load patterns inform threshold selection (p90), feature engineering (peak indicators), and model evaluation metrics (peak-specific MAE/RMSE).">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Peak Load Analysis</div>
+              <div class="cardplot-sub">Time series, hourly/weekly patterns, and solar relationship</div>
+            </div>
+            <div class="tag"><i class="bi bi-graph-up-arrow"></i> Insights</div>
+          </div>
+          <img src="../saved_model_outputs/eda_outputs/step11_peak_load_60min.png" alt="Peak load analysis">
+        </div>
+
+        <!-- Error Sensitivity Analysis -->
+        <div class="cardplot" data-group="signal"
+             data-title="Naive Forecast Error Analysis"
+             data-cap="Error distribution over time, histogram, peak vs non-peak comparison, and error-load relationship scatter plot."
+             data-insight="Alex observes that errors are centered near zero but show significant variability, with peak periods having slightly wider error distributions."
+             data-why="Understanding naive model errors establishes a baseline and highlights areas where advanced models (SARIMA, LSTM, Hybrid) must improve.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Error Sensitivity Analysis</div>
+              <div class="cardplot-sub">Naive forecast errors: temporal, distribution, and load relationships</div>
+            </div>
+            <div class="tag"><i class="bi bi-exclamation-triangle"></i> Insights</div>
+          </div>
+          <img src="../saved_model_outputs/eda_outputs/step12_error_sensitivity_60min.png" alt="Error sensitivity analysis">
+        </div>
+
+        <!-- Multicollinearity Analysis -->
+        <div class="cardplot" data-group="lags"
+             data-title="Feature Correlation & Importance Analysis"
+             data-cap="Correlation heatmap showing feature relationships and bar chart of feature importance based on correlation with target."
+             data-insight="Alex confirms strong multicollinearity among load features and identifies historical load (lags, rolling means) as the most important predictors."
+             data-why="High correlation among features may require regularization or feature selection. Target correlation guides feature prioritization for model training.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Multicollinearity & Feature Importance</div>
+              <div class="cardplot-sub">Correlation heatmap and target correlation analysis</div>
+            </div>
+            <div class="tag"><i class="bi bi-diagram-3"></i> Insights</div>
+          </div>
+          <img src="../saved_model_outputs/eda_outputs/step13_multicollinearity_60min.png" alt="Multicollinearity analysis">
         </div>
 
       </div>
